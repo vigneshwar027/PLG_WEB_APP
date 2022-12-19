@@ -1,0 +1,298 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Products :: PLG</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendors/base/vendor.bundle.base.css' %}">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" type="text/css" href="{% static 'vendors/bootstrap-multiselect.css' %}">
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
+  
+  <style>
+  .select2-container { width: 100% !important; }
+  </style>
+
+</head>
+<body>
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="navbar-brand-wrapper d-flex justify-content-center">
+        <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">  
+          <a class="navbar-brand brand-logo" href="manage-case-type.html"><img src="{% static 'images/logo.png' %}" alt="logo"/></a>
+          <a class="navbar-brand brand-logo-mini" href="manage-case-type.html"><img src="{% static 'images/favicon.png' %}" alt="logo"/></a>
+        </div>  
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">   
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-sort-variant"></span>
+        </button>     
+        <ul class="navbar-nav navbar-nav-right">
+          <li class="nav-item nav-profile dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+              <img src="{% static 'images/user.png' %}" alt="profile"/>
+              <span class="nav-profile-name">Welcome, {{username}}</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+             
+            </div>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+          <span class="mdi mdi-menu"></span>
+        </button>
+      </div>
+    </nav>
+
+	{% include "side_menu.html" %}
+    <div class="main-panel">
+        <div class="content-wrapper">          
+			<div class="row">
+				<div class="col-md-12">
+				  <div class="d-flex justify-content-between flex-wrap">
+					<div class="d-flex align-items-center flex-wrap">
+					  <div class="mr-md-3 mr-xl-5">
+						<h2 class="mb-0">Offer Price</h2>
+					  </div>
+					</div>
+				  </div>		
+				</div>
+			</div>
+			<div class="row">
+				
+				<div class="col-md-12">
+					<div class="card mt-3">
+						<div class="card-body">
+						
+							<select class="website  btn btn-warning btn-flat" id='website' name="states[]" multiple="multiple">
+							  <option type="checkbox" value="Vestiaire">Vestiaire</option>
+							  <option type="checkbox" value="Lampoo">Lampoo</option>
+							  <option type="checkbox" value="RealReal">RealReal</option>
+							</select>	
+							
+							<select class="brand  btn btn-warning btn-flat" id='brand' name="states[]" >
+								<option type="checkbox" value="Gucci">Gucci</option>
+								<option type="checkbox" value="Celine">Celine</option>
+							</select>
+							
+							<select class="model  btn btn-warning btn-flat" id='model' name="states[]" multiple="multiple">
+								<option type="checkbox" value="Gucci">Gucci</option>
+								<option type="checkbox" value="Celine">Celine</option>
+							</select>
+							
+							<select class="condition2  btn btn-warning btn-flat" id='condition2' name="states[]" multiple="multiple">
+							  <option type="checkbox" value="Excellent">Excellent</option>
+							  <option type="checkbox" value="Good">Good</option>
+							</select>
+							
+							<select class="desirability  btn btn-warning btn-flat" id='desirability' name="states[]" multiple="multiple">
+							  <option type="checkbox" value="Excellent">Excellent</option>
+							  <option type="checkbox" value="Good">Good</option>
+							</select>
+
+							<select class="season  btn btn-warning btn-flat" id='season' name="states[]" multiple="multiple">
+							  <option type="checkbox" value="Out">Out of Season</option>
+							  <option type="checkbox" value="Not out">Not out of Season</option>
+							</select>
+
+							<button id="filter" class="btn btn-warning btn-flat">Submit</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="card mt-3">
+						<div class="card-body">
+						
+							<div class="table-responsive">
+								<table id="example" class="table table-hover table-bordered" style="width:100%">
+									<thead>
+										<tr>
+											<th class="text-center">Website</th>
+											<th class="text-center">Maximum Price</th>
+											<th class="text-center">Minimum Price</th>
+											<th class="text-center">Average Price</th>
+											<th class="text-center">Offer Price</th>
+										</tr>
+									</thead>
+									<tbody class="text-center">
+										<tr>
+											<td class="text-center">Vestiare</td>
+											<td class="text-center">£750.45</td>
+											<td class="text-center">£250.45</td>
+											<td class="text-center">£500.15</td>
+											<td class="text-center">£350.45</td>
+										</tr>
+										<tr>
+											<td class="text-center">Vestiare</td>
+											<td class="text-center">£750.45</td>
+											<td class="text-center">£250.45</td>
+											<td class="text-center">£500.15</td>
+											<td class="text-center">£350.45</td>
+										</tr>
+										<tr>
+											<td class="text-center">Vestiare</td>
+											<td class="text-center">£750.45</td>
+											<td class="text-center">£250.45</td>
+											<td class="text-center">£500.15</td>
+											<td class="text-center">£350.45</td>
+										</tr>
+										<tr>
+											<td class="text-center">Vestiare</td>
+											<td class="text-center">£750.45</td>
+											<td class="text-center">£250.45</td>
+											<td class="text-center">£500.15</td>
+											<td class="text-center">£350.45</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+<!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+        <footer class="footer">
+
+            <div class="d-sm-flex justify-content-center justify-content-sm-between">
+              <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright &copy; <script type="text/javascript">document.write((new Date()).getFullYear());</script>. All rights reserved.</span>
+            </div>
+          </footer>
+          <!-- partial -->
+      </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+  
+    <!-- plugins:js -->
+    <script src="{% static 'vendors/base/vendor.bundle.base.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendors/bootstrap-multiselect.js' %}"></script>
+    <!-- endinject -->
+    <!-- End plugin js for this page-->
+    <!-- inject:js -->
+    <script src="{% static 'js/off-canvas.js' %}"></script>
+    <script src="{% static 'js/hoverable-collapse.js' %}"></script>
+    <script src="{% static 'js/template.js' %}"></script>  
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+ 
+
+ 
+
+	$(document).ready(function() {
+		// get_list();
+		$('#website').multiselect({nonSelectedText: 'Website'});
+		$('#brand').multiselect({nonSelectedText: 'Brand'});
+		$('#model').multiselect({nonSelectedText: 'Model'});
+		$('#condition2').multiselect({nonSelectedText: 'Condition'});
+		$('#desirability').multiselect({nonSelectedText: 'Desirability'});
+		$('#season').multiselect({nonSelectedText: 'Season'});
+		
+		$(document).on("click","#filter", function(){
+
+			var website = $('#website option:selected')
+			var website_selected = [];
+			$(website).each(function(index, website) {
+				website_selected.push([$(this).val()]);
+			});
+
+			website_selected = website_selected.join("|");
+
+
+			var brand = $('#brand option:selected')
+			var brand_selected = [];
+			$(brand).each(function(index, brand) {
+				brand_selected.push([$(this).val()]);
+			});
+
+			brand_selected = brand_selected.join("|");
+		
+			var model = $('#model option:selected')
+			var model_selected = [];
+			$(model).each(function(index, model) {
+				model_selected.push([$(this).val()]);
+			});
+
+			model_selected = model_selected.join("|");
+			
+			var model = $('#model option:selected')
+			var model_selected = [];
+			$(model).each(function(index, model) {
+				model_selected.push([$(this).val()]);
+			});
+
+			model_selected = model_selected.join("|");
+			
+			var condition2 = $('#condition2 option:selected')
+			var condition2_selected = [];
+			$(condition2).each(function(index, condition2) {
+				condition2_selected.push([$(this).val()]);
+			});
+
+			condition2_selected = condition2_selected.join("|");
+
+			var desirability = $('#desirability option:selected')
+			var desirability_selected = [];
+			$(desirability).each(function(index, desirability) {
+				desirability_selected.push([$(this).val()]);
+			});
+
+			desirability_selected = desirability_selected.join("|");
+
+			var season = $('#season option:selected')
+			var season_selected = [];
+			$(season).each(function(index, season) {
+				season_selected.push([$(this).val()]);
+			});
+
+			season_selected = season_selected.join("|");
+
+			get_list(website_selected,brand_selected,model_selected,condition2_selected,desirability_selected,season_selected);
+		});
+	});	
+
+
+	function get_list(website_selected='',brand_selected='',model_selected='',condition2_selected='',desirability_selected='',season_selected=''){
+
+		$('#example').DataTable({
+			"deferRender":true,
+			"searching": false,
+			"processing": false,
+			"serverSide": true,
+			"stateSave": true,
+			"info":false,
+			"lengthChange": false,
+			"paging":false,
+			"ordering":false,
+			"lengthMenu": [ [ 10, 25, 50, 100, -1], [ 10, 25, 50,100, 'All'] ],
+			
+			"bDestroy": true
+			
+		});
+	}
+</script>
+</body>
+	
+</html>
