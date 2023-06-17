@@ -1,0 +1,868 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Manage Products :: PLG</title>
+	<!-- plugins:css -->
+	<link rel="stylesheet" href="{%static 'config_page/vendors/mdi/css/materialdesignicons.min.css'%}">
+	<link rel="stylesheet" href="{%static 'config_page/vendors/base/vendor.bundle.base.css'%}">
+	<!-- endinject -->
+	<!-- plugin css for this page -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+	<!-- End plugin css for this page -->
+	<!-- inject:css -->
+	<link rel="stylesheet" type="text/css" href="{%static 'config_page/vendors/bootstrap-multiselect.css'%}">
+	<link rel="stylesheet" href="{%static 'config_page/css/autocomplete.css'%}">
+
+
+	<!-- endinject -->
+	<link rel="shortcut icon" href="{%static 'config_page/images/favicon.png'%}" />
+
+	
+	<link rel="stylesheet" href="{%static 'config_page/css/style.css'%}">
+
+
+
+	<!-- script files -->
+
+	<script src="{%static 'config_page/vendors/base/vendor.bundle.base.js'%}"></script>
+	<!-- <script src="{%static 'config_page/js/jquery-3.6.2.js'%}"></script> -->
+
+	<script src="{%static 'js/jquery-ui.js' %}"></script>
+
+	<script src="{%static 'config_page/js/off-canvas.js'%}"></script>
+	<script src="{%static 'config_page/js/hoverable-collapse.js'%}"></script>
+	<script src="{%static 'config_page/js/template.js'%}"></script>
+	<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+	<script type="text/javascript" src="{%static 'config_page/vendors/bootstrap-multiselect.js'%}"></script>
+	<script>
+		$(document).on({
+				ajaxStart: function () {
+					$("body").addClass("loading");
+				},
+				ajaxStop: function () {
+					$("body").removeClass("loading");
+				}
+			});
+	</script>
+
+	<style>
+		img.animated-gif {
+			width: 120px;
+			height: auto;
+		}
+
+		td {
+			width: auto;
+			max-width: 70mm;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.overlay {
+			display: none;
+			position: fixed;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			z-index: 999;
+			background: rgba(255, 255, 255, 0.8) url("{%static 'config_page/images/loader_sm.gif'%}") center no-repeat;
+		}
+
+		body.loading {
+			overflow: hidden;
+		}
+
+		/* Make spinner image visible when body element has the loading class */
+		body.loading .overlay {
+			display: block;
+		}
+
+		.multiselect-container>li>a>label {
+			margin: 0;
+			height: 100%;
+			cursor: pointer;
+			font-weight: 400;
+			font-size: small;
+			color: black;
+			padding: 3px 20px 3px 40px;
+		}
+
+		
+	</style>
+	
+</head>
+
+<body>
+	<div class="container-scroller">
+
+		<!-- partial:partials/_navbar.html -->
+		<nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+			<div class="navbar-brand-wrapper d-flex justify-content-center">
+				<div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+					<a class="navbar-brand brand-logo" href="manage-case-type.html"><img
+							src="{%static 'config_page/images/logo.png'%}" alt="logo" /></a>
+					<a class="navbar-brand brand-logo-mini" href="manage-case-type.html"><img
+							src="{%static 'config_page/images/favicon.png'%}" alt="logo" /></a>
+				</div>
+			</div>
+			<div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+				<button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+					<span class="mdi mdi-sort-variant"></span>
+				</button>
+				<ul class="navbar-nav navbar-nav-right">
+					<li class="nav-item nav-profile dropdown">
+						<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+							<img src="{%static 'config_page/images/user.png'%}" alt="profile" />
+							<span class="nav-profile-name">Welcome Admin</span>
+						</a>
+						<div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+							aria-labelledby="profileDropdown">
+							<a href="login.html" class="dropdown-item">
+								<i class="mdi mdi-logout text-primary"></i>
+								Logout
+							</a>
+						</div>
+					</li>
+				</ul>
+				<button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+					data-toggle="offcanvas">
+					<span class="mdi mdi-menu"></span>
+				</button>
+			</div>
+		</nav>
+
+		<!-- partial -->
+		<div class="container-fluid page-body-wrapper">
+			<!-- partial:partials/_sidebar.html -->
+			<nav class="sidebar sidebar-offcanvas" id="sidebar">
+
+				<!-- 				
+				<ul class="nav">
+					<li class="nav-item">
+						<a class="nav-link" href="manage_user.html">
+							<i class="mdi mdi-account-multiple-outline menu-icon"></i>
+							<span class="menu-title">Manage Products</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="manage_product.html">
+							<i class="mdi mdi-file-document menu-icon"></i>
+							<span class="menu-title">Manage Products</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="price_listing.html">
+							<i class="mdi mdi-file-document menu-icon"></i>
+							<span class="menu-title">Price listing</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="manage_config.html">
+							<i class="mdi mdi-file-document menu-icon"></i>
+							<span class="menu-title">Manage Configurations</span>
+						</a>
+					</li>
+				</ul> -->
+
+
+				<div class="p-2 mt-4 cost_diff">
+					<h4 class="text-white mb-3">Average Cost</h4>
+					<hr>
+					<p id="high_price" class="dflex justify-content-between">
+						<strong>Highest Price</strong>
+						<span id = "highest_price">7898.12</span>
+					</p>
+					<p id="low_price" class="dflex justify-content-between">
+						<strong>Lowest Price</strong>
+						<span id = "lowest_price">125.47</span>
+					</p>
+					<p id="avg_price" class="dflex justify-content-between">
+						<strong>Average Price</strong>
+						<span id = "average_price">2478.23</span>
+					</p>
+				</div>
+			</nav>
+			<!-- partial -->
+
+			<div class="main-panel">
+				<div class="navpanel">
+					<ul class="nav">
+						<li class="nav-item">
+							<a class="nav-link" href="manage_user.html">
+								<i class="mdi mdi-account-multiple-outline menu-icon"></i>
+								<span class="menu-title">Manage Products</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="manage_product.html">
+								<i class="mdi mdi-file-document menu-icon"></i>
+								<span class="menu-title">Manage Products</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="price_listing.html">
+								<i class="mdi mdi-file-document menu-icon"></i>
+								<span class="menu-title">Price listing</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="manage_config.html">
+								<i class="mdi mdi-file-document menu-icon"></i>
+								<span class="menu-title">Manage Configurations</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="content-wrapper">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="d-flex justify-content-between flex-wrap">
+								<div class="d-flex align-items-center flex-wrap">
+									<div class="mr-md-3 mr-xl-5">
+										<h2 class="mb-0">Products</h2>
+									</div>
+								</div>
+								<div class="d-flex justify-content-between align-items-center flex-wrap">
+									<!-- <button class="btn btn-primary mt-2 mt-xl-0" title="Edit" type="button" data-toggle="modal" data-target="#ViewModal"><i class="mdi mdi-plus-circle-outline"></i> &nbsp Add Product</button> -->
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card mt-3">
+								<div class="card-body d-flex flex-column justify-content-between sticky">
+									<div class="row flex-sm-wrap justify-content-around">
+										<select class="website mx-1 btn btn-warning btn-flat" id='website'
+											name="states[]" multiple="multiple">
+											<option type="checkbox" value="Vestiaire">Vestiaire</option>
+											<option type="checkbox" value="Lampoo">Lampoo</option>
+											<option type="checkbox" value="RealReal">RealReal</option>
+											<option type="checkbox" value="cudoni">Cudoni</option>
+										</select>
+
+										<select class="gender mx-1 btn btn-warning btn-flat" id='gender' name="states[]"
+											multiple="multiple">
+											<option type="checkbox" value="Men">Men</option>
+											<option type="checkbox" value="Women">Women</option>
+											<option type="checkbox" value="Kids">Kids</option>
+										</select>
+
+										<select class="post_status mx-1  btn btn-warning btn-flat" id='post_status'
+											name="states[]" multiple="multiple">
+											<option type="checkbox" value="LIVE">Live</option>
+											<option type="checkbox" value="SOLD">Sold</option>
+											<option type="checkbox" value="DISCOUNTED">Discounted</option>
+										</select>
+
+										<select class="category mx-1  btn btn-warning btn-flat" id='category'
+											name="states[]" multiple="multiple">
+											{%for category in categories%}
+											<option type=" checkbox" value="{{category}}">{{category}}</option>
+											{%endfor%}
+										</select>
+										
+										<select class="sub_cat mx-1  btn btn-warning btn-flat" id='sub_cat'
+											name="states[]" multiple="multiple">
+											{%for sub_cat in sub_cats%}
+											<option type=" checkbox" value="{{sub_cat}}">{{sub_cat}}</option>
+											{%endfor%}
+										</select>
+
+										<select class="condition2 mx-1  btn btn-warning btn-flat" id='condition2'
+											name="states[]" multiple="multiple">
+
+											<option type="checkbox" value="Excellent">Excellent</option>
+											<option type="checkbox" value="Fair">Fair</option>
+											<option type="checkbox" value="Good">Good</option>
+											<option type="checkbox" value="Immaculate">Immaculate</option>
+											<option type="checkbox" value="Item Displays Signs Of Wear">Item Displays
+												Signs Of
+												Wear</option>
+											<option type="checkbox" value="Item Shows No Signs Of Use">Item Shows No
+												Signs Of
+												Use</option>
+											<option type="checkbox" value="Item Shows Signs Of Gentle Use">Item Shows
+												Signs Of
+												Gentle Use</option>
+											<option type="checkbox" value="Minor">Minor</option>
+											<option type="checkbox" value="Never Worn">Never Worn</option>
+											<option type="checkbox" value="New">New</option>
+											<option type="checkbox" value="New With Tag">New With Tag</option>
+											<option type="checkbox" value="Rejection">Rejection</option>
+											<option type="checkbox" value="Scuffing">Scuffing</option>
+											<option type="checkbox" value="Significant">Significant</option>
+											<option type="checkbox" value="">Small Split</option>
+											<option type="checkbox" value="Small Stains">Small Stains</option>
+											<option type="checkbox" value="Very Good">Very Good</option>
+
+										</select>
+
+										<!-- <input class = "form-control w-auto mx-1 "type="text" placeholder="Brand" name="brand" id="brand" value="" style="height: 12mm;"> -->
+
+										<!-- <input type="text" placeholder="Condition" name="condition2" id="condition2" class = "form-control mx-1 w-auto" value="" style="height: 12mm;"> -->
+
+										
+
+										<select class="brand btn btn-warning btn-flat" id='brand'
+											name="states[]" multiple=" multiple">
+											{%for brand in brands%}
+											<option type=" checkbox" value="{{brand}}">{{brand}}</option>
+											{%endfor%}
+										</select>
+									</div>
+
+									<!-- <select class="condition2  btn btn-warning btn-flat" id='condition2' name="states[]" >
+										{%for condition in conditions%}
+										<option type="checkbox" value="{{condition}}">{{condition}}</option>
+									{%endfor%}
+									</select> -->
+									<div class="row d-flex justify-content-end mt-3">
+										<div class="col-lg-3 col-md-3 col-sm-4 col-6">
+											<button id="filter" class="btn btn-warning btn-flat w-100">Submit</button>
+										</div>
+										<div class="col-lg-3 col-md-4 col-sm-6 col-6 pr-0">
+											<button id="excel" class="btn btn-dark btn-flat w-100">Export to
+												excel</button>
+										</div>
+									</div>
+
+									<!-- </a> -->
+								</div>
+
+								<div class="d-flex flex-row justify-content-around">
+									<!-- <p id="high_price">Highest Price: 7898.12</p>
+								<p id="low_price">Lowest Price:125.47</p>
+								<p id="avg_price">Average Price:2478.23</p> -->
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card mt-3">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table id="example" class="table table-hover table-bordered" style="width:100%">
+
+											<thead>
+												<tr>
+													<!-- <th class="text-center">SL.No</th> -->
+													<th class="text-center">Website</th>
+													<th class="text-center">Gender</th>
+													<th class="text-center">Brand</th>
+													<th class="text-center">Category</th>
+													<th class="text-center">Sub Category</th>
+													<th class="text-center ">Product Description</th>
+													<th class="text-center ">Product Condition</th>
+													<th class="text-center">Material</th>
+													<th class="text-center">Colour</th>
+													<!-- <th class="text-center">Price</th> -->
+													<th class="text-center">Live Price</th>
+													<th class="text-center">Special Price</th>
+													<th class="text-center">Discount %</th>
+													<th class="text-center">Aggregate Price</th>
+													<th class="text-center">Estimated Retail Price</th>
+													<th class="text-center">Location</th>
+													<th class="text-center">Sold Date</th>
+													<th class="text-center">DateTime Stamp</th>
+													<th class="text-center">Status</th>
+	
+												</tr>
+											</thead>
+
+											
+											<tbody class="text-center">
+												<tr>
+													<td>1</td>
+													<td>Female</td>
+													<td>Hermes</td>
+													<td>Clothing</td>
+													<td>Skirt</td>
+													<td>A women skirt</td>
+													<td>Good</td>
+													<td>Cotton</td>
+													<td>Red</td>
+													<td>£452.12</td>
+													<td>£452.12</td>
+													<td>£452.12</td>
+													<td>50%</td>
+													<td>£452.12</td>
+													<td>Vestiare</td>
+													<td>England</td>
+													<td>12/12/2022</td>
+													<td>Live</td>
+												</tr>
+												<tr>
+													<td>2</td>
+													<td>Female</td>
+													<td>Hermes</td>
+													<td>Clothing</td>
+													<td>Skirt</td>
+													<td>A women skirt</td>
+													<td>Good</td>
+													<td>Cotton</td>
+													<td>Red</td>
+													<td>£452.12</td>
+													<td>£452.12</td>
+													<td>£452.12</td>
+													<td>50%</td>
+													<td>£452.12</td>
+													<td>Vestiare</td>
+													<td>England</td>
+													<td>12/12/2022</td>
+													<td>Live</td>
+												</tr>
+												<tr>
+													<td>3</td>
+													<td>Female</td>
+													<td>Hermes</td>
+													<td>Clothing</td>
+													<td>Skirt</td>
+													<td>A women skirt</td>
+													<td>Good</td>
+													<td>Cotton</td>
+													<td>Red</td>
+													<td>£452.12</td>
+													<td>£452.12</td>
+													<td>£452.12</td>
+													<td>50%</td>
+													<td>£452.12</td>
+													<td>Vestiare</td>
+													<td>England</td>
+													<td>12/12/2022</td>
+													<td>Live</td>
+												</tr>
+												<tr>
+													<td>4</td>
+													<td>Female</td>
+													<td>Hermes</td>
+													<td>Clothing</td>
+													<td>Skirt</td>
+													<td>A women skirt</td>
+													<td>Good</td>
+													<td>Cotton</td>
+													<td>Red</td>
+													<td>£452.12</td>
+													<td>£452.12</td>
+													<td>£452.12</td>
+													<td>50%</td>
+													<td>£452.12</td>
+													<td>Vestiare</td>
+													<td>England</td>
+													<td>12/12/2022</td>
+													<td>Live</td>
+												</tr>
+												<tr>
+													<td>5</td>
+													<td>Female</td>
+													<td>Hermes</td>
+													<td>Clothing</td>
+													<td>Skirt</td>
+													<td>A women skirt</td>
+													<td>Good</td>
+													<td>Cotton</td>
+													<td>Red</td>
+													<td>£452.12</td>
+													<td>£452.12</td>
+													<td>£452.12</td>
+													<td>50%</td>
+													<td>£452.12</td>
+													<td>Vestiare</td>
+													<td>England</td>
+													<td>12/12/2022</td>
+													<td>Live</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- content-wrapper ends -->
+				<!-- partial:partials/_footer.html -->
+				<footer class="footer">
+					<div class="d-sm-flex justify-content-center justify-content-sm-between">
+						<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright &copy;
+							<script type="text/javascript">document.write((new Date()).getFullYear());</script>. All
+							rights reserved.
+						</span>
+					</div>
+				</footer>
+				<!-- partial -->
+			</div>
+			<!-- main-panel ends -->
+		</div>
+		<!-- page-body-wrapper ends -->
+	</div>
+	<!-- container-scroller -->
+
+	<!-- plugins:js -->
+
+	
+
+	<!-- <script>
+		$(document).ready(function () {
+			$('#example').DataTable({
+				"columnDefs": [{
+					"targets": 'no-sort',
+					"orderable": false,
+				}],
+				pageLength: 5,
+				lengthMenu: [[5, 10, 20, -1], [5, 10, 20, 'All']]
+			});
+		});
+	</script> -->
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="ViewModal" tabindex="-1" role="dialog" aria-labelledby="ViewModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="AddUserLabel">Add / Edit Product</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col">
+							<div class="form-group">
+								<label for="" class="col-form-label p-0 m-0">First Name</label>
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+						<div class="col">
+							<div class="form-group">
+								<label for="" class="col-form-label p-0 m-0">Last Name</label>
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<div class="form-group">
+								<label for="" class="col-form-label p-0 m-0">Password</label>
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+						<div class="col">
+							<div class="form-group">
+								<label for="" class="col-form-label p-0 m-0">Confirm Password</label>
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<div class="form-group">
+								<label for="" class="col-form-label p-0 m-0">Email ID</label>
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+						<div class="col">
+							<div class="form-group">
+								<label for="" class="col-form-label p-0 m-0">Phone</label>
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal"><i
+							class="mdi mdi-close-circle"></i> &nbsp; Cancel</button>
+					<button type="button" class="btn btn-primary"><i class="mdi mdi-content-save"></i> &nbsp;
+						Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+	<script>
+		
+		
+
+
+		$(document).ready(function () {
+
+
+			
+
+			$('#excel').click(function () {
+
+				window.open("{%url 'download_excel'%}")
+			});
+
+
+			
+
+
+			$('#website').multiselect({
+				nonSelectedText: 'Website',
+				//  enableFiltering: true,
+				includeSelectAllOption: true,
+				enableCaseInsensitiveFiltering: true,
+			});
+
+			$('#gender').multiselect({
+				nonSelectedText: 'Gender',
+				// enableFiltering: true,
+				includeSelectAllOption: true,
+				enableCaseInsensitiveFiltering: true,
+			});
+			$('#post_status').multiselect({
+				nonSelectedText: 'Post Status',
+				// enableFiltering: true,
+				includeSelectAllOption: true,
+				enableCaseInsensitiveFiltering: true,
+			});
+			$('#category').multiselect({
+				nonSelectedText: 'Category',
+				enableFiltering: true,
+				includeSelectAllOption: true,
+				enableCaseInsensitiveFiltering: true,
+			});
+			$('#sub_cat').multiselect({
+				nonSelectedText: 'Sub Category',
+				enableFiltering: true,
+				includeSelectAllOption: true,
+				enableCaseInsensitiveFiltering: true,
+			});
+
+			$('#condition2').multiselect({
+				nonSelectedText: 'Condition',
+				enableFiltering: true,
+				includeSelectAllOption: true,
+				enableCaseInsensitiveFiltering: true,
+			});
+
+			$('#brand').multiselect({
+
+				includeSelectAllOption: true,
+				nonSelectedText: 'Brand',
+				enableFiltering: true,
+				enableCaseInsensitiveFiltering: true,
+			});
+
+			$('.multiselect-container').css('max-height', '300px')
+			
+			
+			get_list();
+
+
+			// $('#brand').autocomplete({   
+
+			// 	select: function(event, ui) {
+			// 		//$("#mass_p_article").val(ui.item.text); 
+			// 	},
+			// 	source: function( request, response ) {
+			// 		$.ajax({
+			// 			type: "POST",
+			// 			url : "{%url 'auto_complete_brand'%}",
+			// 			dataType: "json",
+			// 			data: {input: request.term},
+			// 			success: function( data ) {
+			// 				//console.log(data.brand);
+			// 				response( $.map( data.brand, function( item ) {
+			// 					//console.log(item);
+			// 					return {
+			// 						value: item,
+			// 					}
+
+			// 				}));
+			// 			},
+
+
+			// 		});
+
+			// 	},
+			// 	autoFocus: true,
+			// 	minLength: 1 ,
+
+			// }); 
+
+			// $('#condition2').autocomplete({   
+
+			// 	select: function(event, ui) {
+			// 		//$("#mass_p_article").val(ui.item.text); 
+			// 	},
+			// 	source: function( request, response ) {
+			// $.ajax({
+			// 	type: "POST",
+			// 	url : "{%url 'auto_complete_condition2'%}",
+			// 	dataType: "json",
+			// 	data: {input: request.term},
+			// 	success: function( data ) {
+			// 		//console.log(data.condition2);
+			// 		response( $.map( data.condition2, function( item ) {
+			// 			//console.log(item);
+			// 			return {
+			// 				value: item,
+			// 			}
+
+			// 		}));
+			// 	},
+
+
+			// });
+
+			// 	},
+			// 	autoFocus: true,
+			// 	minLength: 1 ,
+
+			// }); 
+
+			$(document).on("click", "#filter", function () {
+				var brand = $('#brand option:selected')
+				var brand_selected = [];
+				$(brand).each(function (index, brand) {
+					brand_selected.push([$(this).val()]);
+				});
+
+				brand_selected = brand_selected.join("|");
+
+				// var brand_selected = $('#brand').val();
+
+				var gender = $('#gender option:selected')
+				var gender_selected = [];
+				$(gender).each(function (index, gender) {
+					gender_selected.push([$(this).val()]);
+				});
+
+				gender_selected = gender_selected.join("|");
+
+				var post_status = $('#post_status option:selected')
+				var post_status_selected = [];
+				$(post_status).each(function (index, post_status) {
+					post_status_selected.push([$(this).val()]);
+				});
+
+				post_status_selected = post_status_selected.join("|");
+
+				var condition2 = $('#condition2 option:selected')
+				var condition2_selected = [];
+				$(condition2).each(function (index, condition2) {
+					condition2_selected.push([$(this).val()]);
+				});
+
+				condition2_selected = condition2_selected.join("|");
+
+
+				// var condition2_selected = $('#condition2').val();
+
+				var website = $('#website option:selected')
+				var website_selected = [];
+				$(website).each(function (index, website) {
+					website_selected.push([$(this).val()]);
+				});
+
+				website_selected = website_selected.join("|");
+
+				var category = $('#category option:selected')
+				var category_selected = [];
+				$(category).each(function (index, category) {
+					category_selected.push([$(this).val()]);
+				});
+
+				category_selected = category_selected.join("|");
+
+				var sub_cat = $('#sub_cat option:selected')
+				var sub_cat_selected = [];
+				$(sub_cat).each(function (index, sub_cat) {
+					sub_cat_selected.push([$(this).val()]);
+				});
+
+				sub_cat_selected = sub_cat_selected.join("|");
+
+				get_list(brand_selected, gender_selected, post_status_selected, condition2_selected, website_selected, category_selected, sub_cat_selected);
+
+				$.post({
+					url: "{%url 'get_prices'%}",
+					type: "POST",
+					success: function (data) {
+						$('#highest_price').html(data["max_price"])
+						$('#lowest_price').html(data["min_price"])
+						$('#average_price').html(data["avg_price"])
+					}
+				})
+
+
+
+			});
+
+		});
+
+
+
+		function get_list(brand_selected = '', gender_selected = '', post_status_selected = '', condition2_selected = '', website_selected = '', category_selected = '', sub_cat_selected = '') {
+
+			$('#example').DataTable({
+				"deferRender": true,
+				"searching": true,
+				"paginate": true,
+				"processing": true,
+				"serverSide": true,
+				//"stateSave": true,
+				// "columns": [
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+
+				// ],
+				"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+				"ajax": {
+					"url": "{%url 'get_products'%}",
+					"type": 'POST',
+					"data": { "brand": brand_selected, "gender": gender_selected, "post_status": post_status_selected, "condition2": condition2_selected, "website": website_selected, "category": category_selected, "sub_cat": sub_cat_selected, "make_excel": "no", "status": 2 }
+
+
+				},
+
+				"bDestroy": true
+			});
+
+
+		}
+	</script>
+
+
+
+</body>
+
+</html>

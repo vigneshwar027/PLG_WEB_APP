@@ -1,0 +1,372 @@
+{%load static%}
+
+{%include 'header.html'%}
+{%include 'side_menu.html'%}
+
+			<div class="main-panel">
+				<div class="clearfix" id="dynamic_message"></div>
+
+
+				<div class="content-wrapper">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="d-flex justify-content-between flex-wrap">
+								<div class="d-flex align-items-center flex-wrap">
+									<div class="mr-md-3 mr-xl-5">
+										<h2 class="mb-0">Manage Users</h2>
+									</div>
+								</div>
+								<div class="d-flex justify-content-between align-items-center flex-wrap">
+									<button class="add_user btn btn-primary mt-2 mt-xl-0" title="Edit" type="button"
+										data-toggle="modal" data-target="#ViewModal"><i
+											class="mdi mdi-plus-circle-outline"></i> &nbsp Add User</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card mt-3">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table id="example" class="table table-hover table-bordered" style="width:100%">
+											<thead>
+												<tr>
+													<!-- <th class="text-center">Sl&nbsp;no</th> -->
+													<th class="text-center">Username</th>
+													<th class="text-center">First Name</th>
+													<th class="text-center">Last Name</th>
+													<th class="text-center">Email</th>
+													<th class="text-center">Active</th>
+													<th class="text-center">Action</th>
+												</tr>
+											</thead>
+
+											<tbody>
+												
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+{%include 'footer.html'%}
+	
+<script>
+	$(document).ready(function () {
+		get_user_list();
+		jQuery.validator.addMethod('chk_mail_exist', function (value) {
+		
+			var email = $("#user_email").val();
+			var id = $("#hidden_user_id").val();
+			var return_var = '';
+			if(email != ''){
+				$.ajax({ 	
+						type: "POST",   
+						url: "{%url 'chk_user_mail_exists'%}",
+						data: {email: email, id: id},		
+						async: false,
+						datatype: "html",
+						success : function(data)
+						{
+							console.log(data);
+							return_var = true;	
+							if(data == "TRUE")
+							{
+								return_var = false;
+							}
+						},
+						fail: function( jqXHR, textStatus, errorThrown ) {
+								console.log( 'Could not get posts, server response: ' + textStatus + ': ' + errorThrown );
+						}
+				});
+			}
+			return return_var;
+		});	
+
+		$(document).on("click","#user_save", function(){
+		
+			$("form[name='user_form']").validate({
+				onkeyup:false,
+				rules:
+				{
+					username: {
+						required : true,
+						//chk_company_exist:true
+					},
+					user_email: {
+						required : true,
+						email: true,
+						chk_mail_exist: true
+					},
+					user_pwd: {
+						required : true,
+					},
+					confirm_pwd: {
+						required : true,
+						equalTo: "#user_pwd"
+					},
+					
+					
+				},
+				messages:{
+					username: {
+						required:"Please enter the User Name",
+					},
+					user_email: {
+						required:"Please enter the User Email",
+					    chk_mail_exist:"Mail ID already Exists."
+					},
+					
+				},
+				submitHandler: function (form) {
+					var form_data = $('#user_form').serialize();
+					var newdiv = "";
+					$.ajax({ 	
+						type: "POST",   
+						url: "{%url 'add_user'%}",
+						data: form_data,		
+						async: false,
+						// datatype: "json",
+						success : function(data)
+						{
+							var msg = data.trim();
+							if( msg == "saved"){
+								$("#ViewModal .close").click();
+								$('#ViewModal').modal('hide');
+								get_user_list();
+								newdiv += "<div class='alert alert-success hideMe'>";
+								newdiv += "<i class='fa fa-check-square' aria-hidden='true'></i>"; 
+								newdiv += "<strong>&nbsp;User added/updated succesfully!</strong></div>";
+								$("#dynamic_message").after(newdiv);
+								$('.hideMe').delay(3000).fadeOut('slow');
+							}
+							else{
+								$("#ViewModal .close").click();
+								$('#ViewModal').modal('hide');
+								
+								newdiv += "<div class='alert alert-danger hideMe'>";
+								
+								newdiv += "<strong>&nbsp;Data not inserted properly!</strong></div>";
+								$("#dynamic_message").after(newdiv);
+								$('.hideMe').delay(3000).fadeOut('slow');
+								
+							}
+							
+														
+						},
+						fail: function( jqXHR, textStatus, errorThrown ) {
+								console.log( 'Could not get posts, server response: ' + textStatus + ': ' + errorThrown );
+						}
+					});
+						
+				}
+			});
+		
+		
+		});
+
+		
+
+		$(document).on('click','.user_status_btn', function(e){
+			if (confirm("Are you sure you want to update this user status?")) {
+				var status = ( $(this).val() == '0' ) ? '1' : (( $(this).val() == '1' ) ? '0' : '1');
+				
+				var id = $(this).attr('data-id');
+				var newdiv = '';
+				$.ajax({ 	
+					type: "POST",   
+					url: "{%url 'change_user_status'%}",
+					data:{id:id, status: status},		
+					async: false,
+					datatype: "html",
+					success : function(data)
+					{
+						
+						newdiv += "<div class='alert alert-success hideMe'>";
+						newdiv += "<i class='fa fa-check-square' aria-hidden='true'></i>"; 
+						newdiv += "<strong>&nbsp;User status changed succesfully!</strong></div>";
+						get_user_list();
+						$("#dynamic_message").after(newdiv);
+						$('.hideMe').delay(3000).fadeOut('slow');
+						
+					},
+					fail: function( jqXHR, textStatus, errorThrown ) {
+						console.log( 'Could not get posts, server response: ' + textStatus + ': ' + errorThrown );
+					}
+				});
+			}
+			else{
+				return false;
+			}
+
+   		});
+
+		$(document).on("click",".add_user", function(){
+			$('.row_pwd').show();
+			$('#pwd_label').html('Password');
+			$('#cpwd_label').html('Confirm Password');
+			$('#hidden_user_id').val('');
+			$('#username').val('');
+			$('#user_email').val('');
+			$('#user_pwd').val('');
+			$('#confirm_pwd').val('');
+			$("#user_active").prop('checked', false);
+			
+		});
+
+		$(document).on("click",".edit_user", function(){
+			//$('#pwd_label').html('New Password');
+			//$('#cpwd_label').html('Confirm New Password');
+			$('.row_pwd').hide();
+			$('#id').val($(this).attr('data-id'));
+			$('#description').val($(this).attr('data-description'));
+			$('#percentage').val($(this).attr('data-percentage'));
+
+			$('#hidden_user_id').val($(this).attr('data-id'));
+			$('#username').val($(this).attr('data-username'));
+			$('#user_email').val($(this).attr('data-email'));
+			$('#user_pwd').val('');
+			$('#confirm_pwd').val('');
+			$("#user_active").prop('checked', false);
+			if ($(this).attr('data-user_status') == "True")
+			{
+				$("#user_active").prop('checked', true);
+			}
+			
+		});
+
+	});
+
+	function get_user_list(){
+		
+		$.ajax({ 	
+			type: "POST",   
+			url:"{%url 'get_user_list'%}",
+			//data:{},		
+			async: false,
+			// datatype: "json",
+			success : function(data)
+			{
+				$("#example").dataTable().fnDestroy();
+				$("#example tbody").html(data);
+				$('#example').DataTable({
+					"deferRender": true,
+					"info": true,
+					"paging": true,
+					"searching": true,
+					"columnDefs": [{
+						"targets": 'no-sort',
+						"orderable": false,
+					}],
+					pageLength: 10,
+					lengthMenu: [[5, 10, 20, -1], [5, 10, 20, 'All']]
+				});
+				
+			},
+			fail: function( jqXHR, textStatus, errorThrown ) {
+				console.log( 'Could not get posts, server response: ' + textStatus + ': ' + errorThrown );
+			}
+
+		});
+
+
+
+	}
+	
+	
+	
+</script>
+
+	
+
+	<!-- popups -->
+	<!-- Modal -->
+	<div class="modal fade" id="ViewModal" tabindex="-1" role="dialog" aria-labelledby="ViewModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<form method="post" name="user_form" id="user_form" onsubmit="return false;">
+					{%csrf_token%}
+					<div class="modal-header">
+						<h5 class="modal-title" id="AddUserLabel">Add / Edit User</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+				
+					<div class="modal-body">
+						
+						<div class="row">
+							<div class="col">
+								<div class="form-group">
+									<label for="" class="col-form-label p-0 m-0">Username</label>
+									<input type="text" class="form-control" id="username" name="username"/>
+									<input type="hidden" class="form-control" id="hidden_user_id" name="hidden_user_id"/>
+								</div>
+							</div>
+							<!-- <div class="col">
+								<div class="form-group">
+									<label for="" class="col-form-label p-0 m-0">Last Name</label>
+									<input type="text" class="form-control" id="" />
+								</div>
+							</div> -->
+						</div>
+						<div class="row">
+							<div class="col">
+								<div class="form-group">
+									<label for="" class="col-form-label p-0 m-0">User Email</label>
+									<input type="text" class="form-control" id="user_email" name="user_email"/>
+								</div>
+							</div>
+							<!-- <div class="col">
+								<div class="form-group">
+									<label for="" class="col-form-label p-0 m-0">Last Name</label>
+									<input type="text" class="form-control" id="" />
+								</div>
+							</div> -->
+						</div>
+						<div class="row row_pwd">
+							<div class="col">
+								<div class="form-group">
+									<label for="" class="col-form-label p-0 m-0" id="pwd_label">Password</label>
+									<input type="text" class="form-control" id="user_pwd" name="user_pwd"/>
+								</div>
+							</div>
+							<div class="col">
+								<div class="form-group">
+									<label for="" class="col-form-label p-0 m-0" id="cpwd_label">Confirm Password</label>
+									<input type="text" class="form-control" id="confirm_pwd" name="confirm_pwd"/>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							
+							<div class="col">
+								<div class="form-group">
+
+									<div class="mt-4 ">
+										<label for="" class=" col-form-label p-0 m-0">Active</label>
+										<input type="checkbox" class="mt-1 ml-2 form-checkbox" id="user_active" name="user_active"/>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal"><i
+								class="mdi mdi-close-circle"></i> &nbsp; Cancel</button>
+						<button id="user_save" type="submit" class="btn btn-primary"><i class="mdi mdi-content-save"></i> &nbsp;
+							Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

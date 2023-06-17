@@ -1,0 +1,33 @@
+from django.urls import path,include
+from .import views
+urlpatterns = [
+    # path('', views.test), 
+    path('',views.login,name='login'),
+    path('logout/',views.logout,name='logout'), 
+    path('manage_product/', views.manage_product, name='manage_product'),
+    path('add_config/', views.add_config, name='add_config'),
+    path('get_config/', views.get_config, name='get_config'),
+    # path('get_prices/', views.get_prices, name='get_prices'),
+    path('get_offer_price/', views.get_offer_price, name='get_offer_price'),
+    path('manage_user/', views.manage_user, name='manage_user'),
+    path('manage_config/', views.manage_config, name='manage_config'),
+    path('price_listing/', views.price_listing, name='price_listing'),
+    path('get_products/', views.get_products, name='get_products'),
+    path('get_col_data/', views.get_col_data, name='get_col_data'),
+    path('get_site_data/', views.get_site_data, name='get_site_data'),
+    path('get_sub_category/', views.get_sub_category, name='get_sub_category'),
+    path('get_category/', views.get_category, name='get_category'),
+    path('import_to_db/', views.import_to_db, name='import_to_db'),
+    path('chk_user_mail_exists', views.chk_user_mail_exists, name='chk_user_mail_exists'),
+    path('add_user', views.add_user, name='add_user'),
+    path('get_user_list', views.get_user_list, name='get_user_list'),
+    path('change_user_status', views.change_user_status, name='change_user_status'),
+    path('auto_complete_brand', views.auto_complete_brand, name='auto_complete_brand'),
+    path('auto_complete_model', views.auto_complete_model, name='auto_complete_model'),
+    path('auto_complete_condition', views.auto_complete_condition, name='auto_complete_condition'),
+    path('auto_complete_desire', views.auto_complete_desire, name='auto_complete_desire'),
+    path('auto_complete_season', views.auto_complete_season, name='auto_complete_season'),
+    path('auto_complete_condition2', views.auto_complete_condition2, name='auto_complete_condition2'),
+    path('download_excel', views.download_excel, name='download_excel'),
+    
+]

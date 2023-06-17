@@ -1,0 +1,98 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Manage Users :: PLG</title>
+	<!-- plugins:css -->
+	<link rel="stylesheet" href="{%static 'vendors/mdi/css/materialdesignicons.min.css' %}">
+	<link rel="stylesheet" href="{%static 'vendors/base/vendor.bundle.base.css' %}">
+	<!-- endinject -->
+	<!-- plugin css for this page -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+	<!-- End plugin css for this page -->
+	<!-- inject:css -->
+	<link rel="stylesheet" href="{%static 'css/style_old.css' %}">
+	<!-- endinject -->
+	<link rel="shortcut icon" href="{%static 'images/favicon.png' %}" />
+	<!--<link rel="stylesheet" href="{%static 'css/bootstrap-min.css' %}">-->
+	<link rel="stylesheet" href="{%static 'css/jquery-ui.css' %}">
+
+
+	<!-- plugins:js -->
+	<script src="{%static 'vendors/base/vendor.bundle.base.js' %}"></script>
+	<script src="{%static 'js/jquery-ui.js' %}"></script>
+	
+    
+	<!-- endinject -->
+	<!-- End plugin js for this page-->
+	<!-- inject:js -->
+	<script src="{%static 'js/off-canvas.js' %} "></script>
+	<script src="{%static 'js/hoverable-collapse.js' %} "></script>
+	<script src="{%static 'js/template.js' %} "></script>
+	<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+	<script src="{%static 'js/bootstrap-min.js' %}"></script>
+    <script src="{%static 'js/jquery.validate.js' %}"></script>
+	<script src="{%static 'js/jQuery-additional-methods.js' %}"></script>
+	<!--<script src="{%static 'js/jquery-tooltip.js' %}"></script>-->
+
+
+</head>
+
+<body>
+	<div class="container-scroller">
+		<!-- partial:partials/_navbar.html -->
+		<nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+			<div class="navbar-brand-wrapper d-flex justify-content-center">
+				<div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+					<a class="navbar-brand brand-logo" href="#"><img src="{%static 'images/logo.png' %}"
+							alt="logo" /></a>
+					<a class="navbar-brand brand-logo-mini" href="#"><img src="{%static 'images/favicon.png' %}"
+							alt="logo" /></a>
+				</div>
+			</div>
+			<div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+				<button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+					<span class="mdi mdi-sort-variant"></span>
+				</button>
+				<ul class="navbar-nav navbar-nav-right">
+					<li class="nav-item nav-profile dropdown">
+						<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+							<img src="{%static 'images/user.png' %}" alt="profile" />
+							<span class="nav-profile-name">Welcome {{user.first_name}}</span>
+						</a>
+						<div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+							aria-labelledby="profileDropdown">
+							<a href="{%url 'manage_user'%}" class="dropdown-item">
+								<i class="mdi mdi-account-multiple-outline menu-icon"></i>
+								Manage Users
+							</a>
+							<a href="{%url 'manage_product'%}" class="dropdown-item">
+								<i class="mdi mdi-file-document menu-icon"></i>
+								Manage Products
+							</a>
+							<a href="{%url 'manage_config'%}" class="dropdown-item">
+								<i class="mdi mdi-file-document menu-icon"></i>
+								Manage Configurations
+							</a>
+							<a href="{%url 'price_listing'%}" class="dropdown-item">
+								<i class="mdi mdi-file-document menu-icon"></i>
+								Offer Pricelisting
+							</a>
+							<a href="{%url 'logout'%}" class="dropdown-item">
+								<i class="mdi mdi-logout text-primary"></i>
+								Logout
+							</a>
+						</div>
+					</li>
+				</ul>
+				<button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+					data-toggle="offcanvas">
+					<span class="mdi mdi-menu"></span>
+				</button>
+			</div>
+		</nav>

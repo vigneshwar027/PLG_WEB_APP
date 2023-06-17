@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "rlvd",
+            "python": "C:\\Users\\Dell\\Envs\\rlvd\\Scripts\\python.exe",
+            "type": "python",
+            "request": "launch",
+            "program": "F:\\PROJECTS\\JK_SOFT_PROJECTS\\PLG_WEBAPP\\PLG_LIVE_V5\\manage.py",
+            "console": "internalConsole",
+            "args": ["runserver"],
+           "django": true,
+           "justMyCode": true,
+          }
+    ]
+}

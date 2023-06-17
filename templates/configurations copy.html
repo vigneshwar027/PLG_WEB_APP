@@ -1,0 +1,502 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Manage Configurations :: PLG</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="{%static 'config_page/vendors/mdi/css/materialdesignicons.min.css'%}">
+    <link rel="stylesheet" href="{%static 'config_page/vendors/base/vendor.bundle.base.css'%}">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="{%static 'config_page/css/style.css'%}">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="{%static 'config_page/images/logo.png'%}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+
+    
+</head>
+
+<div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <div class="navbar-brand-wrapper d-flex justify-content-center">
+            <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+                <a class="navbar-brand brand-logo" href="manage-case-type.html"><img src="images/logo.png"
+                        alt="logo" /></a>
+                <a class="navbar-brand brand-logo-mini" href="manage-case-type.html"><img src="{%static 'config_page/images/favicon.png'%}"
+                        alt="logo" /></a>
+            </div>
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+            <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                <span class="mdi mdi-sort-variant"></span>
+            </button>
+            <ul class="navbar-nav navbar-nav-right">
+                <li class="nav-item nav-profile dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                        <img src="{%static 'config_page/images/user.png'%}" alt="profile" />
+                        <span class="nav-profile-name">Welcome Admin</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                        <a href="{%url 'logout'%}" class="dropdown-item">
+                            <i class="mdi mdi-logout text-primary"></i>
+                            Logout
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                data-toggle="offcanvas">
+                <span class="mdi mdi-menu"></span>
+            </button>
+        </div>
+    </nav>
+
+    {%include 'side_menu.html'%}
+   
+
+
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <!-- <div class="container-fluid " style="overflow-y: scroll !important;">
+                    
+                </div> -->
+                <div id="existing_config" class="ex-config">
+                    <div class="ex-config-row">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-2">
+                                Brand
+                            </div>
+                            <div class="col-md-5">
+                                <input class="form-control" type="text" name="" id="brand_desc" value="Hermes">
+                            </div>
+                            <div class="col-md-1">
+                                <span id="demo1"></span>
+                                <input type="text" id="percent_brand" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+                            <div class="col-md-3">
+                                <div id="slider_brand"></div>
+                            </div>
+                            <div class="col-md-1 d-flex justify-content-between">
+                                <i class="bi bi-search" style="font-size: 1.2em;"></i>
+                                <i id = "add_brand" class="bi bi-file-plus-fill" style="font-size: 1.2em;"></i>
+                            </div>
+                        </div>
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-2">
+                                Model
+                            </div>
+                            <div class="col-md-5">
+                                <input class="form-control" type="text" name="" id="model_desc" value="Birkin">
+                            </div>
+                            <div class="col-md-1">
+                                <span id="demo1"></span>
+                                <input type="text" id="percent_model" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+                            <div class="col-md-3">
+                                <div id="slider_model"></div>
+                            </div>
+                            <div class="col-md-1 d-flex justify-content-between">
+                                <i class="bi bi-search" style="font-size: 1.2em;"></i>
+                                <i id = "add_model" class="bi bi-file-plus-fill" style="font-size: 1.2em;"></i>
+                            </div>
+                        </div>
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-2">
+                                Condition
+                            </div>
+                            <div class="col-md-5">
+                                <input class="form-control" type="text" name="" id="condition_desc" value="Good">
+                            </div>
+                            <div class="col-md-1">
+                                <span id="demo1"></span>
+                                <input type="text" id="percent_cond" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+                            <div class="col-md-3">
+                                <div id="slider_cond"></div>
+                            </div>
+                            <div class="col-md-1 d-flex justify-content-between">
+                                <i class="bi bi-search" style="font-size: 1.2em;"></i>
+                                <i id = "add_cond" class="bi bi-file-plus-fill" style="font-size: 1.2em;"></i>
+                            </div>
+                        </div>
+                       <div class="row d-flex align-items-center">
+                            <div class="col-md-2">
+                                Desirability
+                            </div>
+                            <div class="col-md-5">
+                                <input class="form-control" type="text" name="" id="desire_desc" value="Excellent">
+                            </div>
+                            <div class="col-md-1">
+                                <span id="demo1"></span>
+                                <input type="text" id="percent_desire" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+                            <div class="col-md-3">
+                                <div id="slider_desire"></div>
+                            </div>
+                            <div class="col-md-1 d-flex justify-content-between">
+                                <i class="bi bi-search" style="font-size: 1.2em;"></i>
+                                <i id = "add_desire" class="bi bi-file-plus-fill" style="font-size: 1.2em;"></i>
+                            </div>
+                        </div>
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-2">
+                                Season
+                            </div>
+                            <div class="col-md-5">
+                                <input class="form-control" type="text" name="" id="season_desc" value="Out of season">
+                            </div>
+                            <div class="col-md-1">
+                                <span id="demo1"></span>
+                                <input type="text" id="percent_season" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                            </div>
+                            <div class="col-md-3">
+                                <div id="slider_season"></div>
+                            </div>
+                            <div class="col-md-1 d-flex justify-content-between">
+                                <i class="bi bi-search" style="font-size: 1.2em;"></i>
+                                <i id = "add_season" class="bi bi-file-plus-fill" style="font-size: 1.2em;"></i>
+                            </div>
+                        </div>
+                </div>
+                <div class="row">
+						<div class="col-md-12">
+							<div class="card mt-3">
+								<div class="card-body">
+
+									<div class="table-responsive">
+										<table id="example" class="table table-hover table-bordered" style="width:100%">
+											<thead>
+												<tr>
+													<th class="text-center">Classification</th>
+													<th class="text-center">Description</th>
+													<th class="text-center">Percentage</th>
+													
+												</tr>
+											</thead>
+											<tbody class="text-center">
+												<tr>
+													<td class="text-center">Cudoni</td>
+													<td class="text-center">£750.45</td>
+													<td class="text-center">£250.45</td>
+													
+												</tr>
+												<tr>
+													<td class="text-center">Lampoo</td>
+													<td class="text-center">£700.00</td>
+													<td class="text-center">£250.00</td>
+													
+												</tr>
+												<tr>
+													<td class="text-center">RealReal</td>
+													<td class="text-center">£650.00</td>
+													<td class="text-center">£150.00</td>
+													
+												</tr>
+												<tr>
+													<td class="text-center">Vestiare</td>
+													<td class="text-center">£650.00</td>
+													<td class="text-center">£250.00</td>
+													
+												</tr>
+												<tr>
+													<td class="text-right" colspan=2><b>Average Price</b></td>
+													<td class="text-center">£456.36</td>
+																										
+												</tr>
+												<tr>
+													<td class="text-right" colspan=2><b>Rlvd Offer Price</b></td>
+													<td class="text-center">£661.70</td>
+																										
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+                
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:partials/_footer.html -->
+            <footer class="footer">
+                <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                    <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright &copy;
+                        <script type="text/javascript">
+                            document.write((new Date()).getFullYear());
+                        </script>. All
+                        rights reserved.
+                    </span>
+                </div>
+            </footer>
+            <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+
+<!-- plugins:js -->
+<script src="{%static 'config_page/vendors/base/vendor.bundle.base.js'%}"></script>
+<!-- endinject -->
+<!-- End plugin js for this page-->
+<!-- inject:js -->
+<script src="{%static 'config_page/js/off-canvas.js'%}"></script>
+<script src="{%static 'config_page/js/hoverable-collapse.js'%}"></script>
+<script src="{%static 'config_page/js/template.js'%}"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable({
+            "columnDefs": [{
+                "targets": 'no-sort',
+                "orderable": false,
+            }],
+            pageLength: 5,
+            lengthMenu: [
+                [5, 10, 20, -1],
+                [5, 10, 20, 'All']
+            ]
+        });
+    });
+</script>
+<!-- Modal -->
+<div class="modal fade" id="ViewModal" tabindex="-1" role="dialog" aria-labelledby="ViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AddUserLabel">Add / Edit Client</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="" class="col-form-label p-0 m-0">First Name</label>
+                            <input type="text" class="form-control" id="" />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="" class="col-form-label p-0 m-0">Last Name</label>
+                            <input type="text" class="form-control" id="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="" class="col-form-label p-0 m-0">Password</label>
+                            <input type="text" class="form-control" id="" />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="" class="col-form-label p-0 m-0">Confirm Password</label>
+                            <input type="text" class="form-control" id="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="" class="col-form-label p-0 m-0">Email ID</label>
+                            <input type="text" class="form-control" id="" />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="" class="col-form-label p-0 m-0">Phone</label>
+                            <input type="text" class="form-control" id="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="mdi mdi-close-circle"></i>
+                    &nbsp; Cancel</button>
+                <button type="button" class="btn btn-primary"><i class="mdi mdi-content-save"></i> &nbsp;
+                    Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var slider = document.getElementById("Range");
+    var output = document.getElementById("new");
+    output.innerHTML = slider.value;
+    slider.oninput = function () {
+        output.innerHTML = this.value;
+    }
+
+    var slider1 = document.getElementById("myRange1");
+    var output1 = document.getElementById("demo1");
+    output.innerHTML = slider1.value;
+    slider1.oninput = function () {
+        output1.innerHTML = this.value;
+    }
+
+    var slider2 = document.getElementById("myRange2");
+    var output2 = document.getElementById("demo2");
+    output.innerHTML = slider2.value;
+    slider2.oninput = function () {
+        output2.innerHTML = this.value;
+    }
+
+    var slider3 = document.getElementById("myRange3");
+    var output3 = document.getElementById("demo3");
+    output.innerHTML = slider3.value;
+    slider3.oninput = function () {
+        output3.innerHTML = this.value;
+    }
+    var slider4 = document.getElementById("myRange4");
+    var output4 = document.getElementById("demo4");
+    output.innerHTML = slider4.value;
+    slider4.oninput = function () {
+        output4.innerHTML = this.value;
+    }
+</script>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script>
+        $( function() {
+            $( "#slider_brand" ).slider({
+            value:0,
+            min: -10,
+            max: 10,
+            step: 1,
+            slide: function( event, ui ) {
+                $( "#percent_brand" ).val(ui.value );
+            }
+            });
+            $( "#percent_brand" ).val( $( "#slider_brand" ).slider( "value" ) );
+
+			
+			$( "#slider_model" ).slider({
+            value:0,
+            min: -10,
+            max: 10,
+            step: 1,
+            slide: function( event, ui ) {
+                $( "#percent_model" ).val(ui.value );
+            }
+            });
+            $( "#percent_model" ).val( $( "#slider_model" ).slider( "value" ) );
+			
+			$( "#slider_cond" ).slider({
+            value:0,
+            min: -10,
+            max: 10,
+            step: 1,
+            slide: function( event, ui ) {
+                $( "#percent_cond" ).val(ui.value );
+            }
+            });
+            $( "#percent_cond" ).val( $( "#slider_cond" ).slider( "value" ) );
+
+			
+			$( "#slider_desire" ).slider({
+            value:0,
+            min: -10,
+            max: 10,
+            step: 1,
+            slide: function( event, ui ) {
+                $( "#percent_desire" ).val(ui.value );
+            }
+            });
+            $( "#percent_desire" ).val( $( "#slider_desire" ).slider( "value" ) );
+			
+			$( "#slider_season" ).slider({
+            value:0,
+            min: -10,
+            max: 10,
+            step: 1,
+            slide: function( event, ui ) {
+                $( "#percent_season" ).val(ui.value );
+            }
+            });
+            $( "#percent_season" ).val( $( "#slider_season" ).slider( "value" ) );
+        } );
+
+        $("#add_brand").click(function(){
+            $.post({
+                url:"{%url 'add_config'%}",
+                data:{"classification":"brand","percentage":$("#percent_brand").val(),"description":$("#brand_desc").val()},
+                success:function(data){
+                    console.log('brand added')
+                }
+            })
+        })
+       
+        $("#add_model").click(function(){
+            $.post({
+                url:"{%url 'add_config'%}",
+                data:{"classification":"model","percentage":$("#percent_model").val(),"description":$("#model_desc").val()},
+                success:function(data){
+                    console.log('model added')
+                }
+            })
+        })
+        
+        $("#add_cond").click(function(){
+            $.post({
+                url:"{%url 'add_config'%}",
+                data:{"classification":"condition","percentage":$("#percent_cond").val(),"description":$("#cond_desc").val()},
+                success:function(data){
+                    console.log('cond added')
+                }
+            })
+        })
+
+        $("#add_desire").click(function(){
+            $.post({
+                url:"{%url 'add_config'%}",
+                data:{"classification":"desirability","percentage":$("#percent_desire").val(),"description":$("#desire_desc").val()},
+                success:function(data){
+                    console.log('desire added')
+                }
+            })
+        })
+
+        $("#add_season").click(function(){
+            $.post({
+                url:"{%url 'add_config'%}",
+                data:{"classification":"season","percentage":$("#percent_season").val(),"description":$("#season_desc").val()},
+                success:function(data){
+                    alert('Entry Added')
+                }
+            })
+        })
+
+    </script>
+</html>

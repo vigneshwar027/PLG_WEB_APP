@@ -1,0 +1,547 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Products :: PLG</title>
+	<!-- plugins:css -->
+	<link rel="stylesheet" href="{%static 'vendors/mdi/css/materialdesignicons.min.css' %}">
+	<link rel="stylesheet" href="{%static 'vendors/base/vendor.bundle.base.css' %}">
+	<!-- endinject -->
+	<!-- plugin css for this page -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+	<!-- End plugin css for this page -->
+	<!-- inject:css -->
+	<link rel="stylesheet" href="{%static 'css/style.css' %}">
+	<!-- endinject -->
+	<link rel="shortcut icon" href="{%static 'images/favicon.png' %}" />
+
+
+	<script src="{%static 'vendors/base/vendor.bundle.base.js' %}"></script>
+
+
+	<!-- js for auto complete -->
+	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+	<!-- css for auto complete -->
+
+	<link rel="stylesheet" href="{%static 'css/autocomplete.css' %}">
+
+
+	<script src="{%static 'js/off-canvas.js' %}"></script>
+	<script src="{%static 'js/hoverable-collapse.js' %}"></script>
+	<!-- <script src="js/template.js"></script> -->
+	<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+	<!-- multiselect -->
+
+	<link rel="stylesheet" type="text/css" href="{%static 'vendors/bootstrap-multiselect.css' %}">
+
+
+	<script type="text/javascript" src="{%static 'vendors/bootstrap-multiselect.js' %}"></script>
+
+
+	<style>
+		.select2-container {
+			width: 100% !important;
+		}
+
+		@media (max-width: 576px) {
+			.offer_form input {
+				margin-left: 0 !important;
+				margin-top: 0.5em !important;
+			}
+
+			.offer_form .btn-group {
+				width: 100%
+			}
+		}
+
+		img.animated-gif {
+			width: 120px;
+			height: auto;
+		}
+
+
+		/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+		body.loading .modal {
+			overflow: hidden;
+		}
+
+		/* Anytime the body has the loading class, our
+   modal element will be visible */
+		body.loading .modal {
+			display: block;
+		}
+
+		.modal {
+			display: none;
+			position: fixed;
+			z-index: 1000;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			background: rgba(255, 255, 255, .8) url('{%static "images/loader_sm.gif"%}') 50% 50% no-repeat;
+		}
+
+	</style>
+
+	<script>
+
+		$(document).ready(function () {
+			$("#filter").click(function () {
+				$('body').addClass("loading"); 
+			});
+			$(document).ajaxComplete(function () {
+				$('body').removeClass("loading"); 
+			});
+		});
+	</script>
+
+</head>
+
+
+
+<body>
+	<div class="modal"></div>
+
+	<div class="container-scroller">
+		<!-- partial:partials/_navbar.html -->
+		<nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+			<div class="navbar-brand-wrapper d-flex justify-content-center">
+				<div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+					<a class="navbar-brand brand-logo" href="#"><img src="{%static 'images/logo.png' %}"
+							alt="logo" /></a>
+					<a class="navbar-brand brand-logo-mini" href="#"><img src="{%static 'images/favicon.png' %}"
+							alt="logo" /></a>
+				</div>
+			</div>
+			<div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+				<button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+					<span class="mdi mdi-sort-variant"></span>
+				</button>
+				<ul class="navbar-nav navbar-nav-right">
+					<li class="nav-item nav-profile dropdown">
+						<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+							<img src="{%static 'images/user.png' %}" alt="profile" />
+							<span class="nav-profile-name">Welcome Admin</span>
+						</a>
+						<div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+							aria-labelledby="profileDropdown">
+							<a href="{%url 'manage_user'%}" class="dropdown-item">
+								<i class="mdi mdi-account-multiple-outline menu-icon"></i>
+								Manage Users
+							</a>
+							<a href="{%url 'manage_product'%}" class="dropdown-item">
+								<i class="mdi mdi-file-document menu-icon"></i>
+								Manage Products
+							</a>
+							<a href="{%url 'manage_config'%}" class="dropdown-item">
+								<i class="mdi mdi-file-document menu-icon"></i>
+								Manage Configurations
+							</a>
+							<a href="{%url 'price_listing'%}" class="dropdown-item">
+								<i class="mdi mdi-file-document menu-icon"></i>
+								Offer Pricelisting
+							</a>
+							<a href="{%url 'logout'%}" class="dropdown-item">
+								<i class="mdi mdi-logout text-primary"></i>
+								Logout
+							</a>
+						</div>
+					</li>
+				</ul>
+				<button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+					data-toggle="offcanvas">
+					<span class="mdi mdi-menu"></span>
+				</button>
+			</div>
+		</nav>
+
+		{%include 'side_menu.html'%}
+
+		<div class="main-panel">
+			<div class="content-wrapper">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="d-flex justify-content-between flex-wrap">
+							<div class="d-flex align-items-center flex-wrap">
+								<div class="mr-md-3 mr-xl-5">
+									<h2 class="mb-0">Offer Price</h2>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+
+					<div class="col-md-12">
+						<div class="card mt-3">
+							<div class="d-flex flex-lg-row flex-md-row flex-sm-row flex-column card-body offer_form">
+
+								<!-- <select class="website  btn btn-warning btn-flat" id='website' name="states[]"
+									multiple="multiple">
+									<option type="checkbox" value="Cudoni">Cudoni</option>
+									<option type="checkbox" value="Lampoo">Lampoo</option>
+									<option type="checkbox" value="RealReal">RealReal</option>
+									<option type="checkbox" value="Vestiaire">Vestiaire</option>
+								</select> -->
+
+								<input id="brandbox" style="height:45px" class="ml-3 form-control" placeholder="Brand"
+									type="text">
+
+								<input id="modelbox" style="height:45px" class="ml-3 form-control autocomp"
+									placeholder="Model" type="text">
+
+								<input id="conditionbox" style="height:45px" class="ml-3 form-control autocomp"
+									placeholder="Condition" type="text">
+
+								<input id="desirebox" style="height:45px" class="ml-3 form-control autocomp"
+									placeholder="Desirability" type="text">
+
+								<input id="seasonbox" style="height:45px" class="ml-3 form-control autocomp"
+									placeholder="Season" type="text">
+
+								<button id="filter" class="ml-3 btn btn-dark btn-flat">Submit</button>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card mt-3">
+							<div class="card-body">
+
+								<div class="table-responsive">
+									<table id="example" class="table table-hover table-bordered" style="width:100%">
+										<thead>
+											<tr>
+												<th class="text-center">Website</th>
+												<th class="text-center">Maximum Price</th>
+												<th class="text-center">Minimum Price</th>
+												<th class="text-center">Average Price</th>
+
+											</tr>
+										</thead>
+										<tbody class="text-center">
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- content-wrapper ends -->
+			<!-- partial:partials/_footer.html -->
+			<footer class="footer">
+
+				<div class="d-sm-flex justify-content-center justify-content-sm-between">
+					<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright &copy;
+						<script type="text/javascript">document.write((new Date()).getFullYear());</script>. All
+						rights reserved.
+					</span>
+				</div>
+			</footer>
+			<!-- partial -->
+		</div>
+		<!-- main-panel ends -->
+	</div>
+	<!-- page-body-wrapper ends -->
+	</div>
+	<!-- container-scroller -->
+
+	<script>
+
+		$(document).ready(function () {
+
+
+			var brandtag = [
+				'Hermes',
+				'Birkin',
+				'Nevada',
+				'Denim',
+				'Levis',
+				'Adidas',
+				'Puma'
+			];
+
+			var modeltag = [
+				'Hermes',
+				'Birkin',
+				'Nevada',
+				'Denim',
+				'Levis',
+				'Adidas',
+				'Puma'
+			];
+
+			var seasontag = [
+				'Out of Season',
+				'On Season',
+				'Not Out of Season'
+			];
+
+			var desirabilitytag = [
+				'Good',
+				'Very Good',
+				'Excellent',
+				'Fair',
+				'Very fair'
+			];
+
+			var conditiontag = [
+				'Good',
+				'Very Good',
+				'Excellent',
+				'Fair',
+				'Very fair'
+			];
+
+
+			$("#brandbox").autocomplete({
+				source: function (request, response) {
+					$.ajax({
+						type: "POST",
+						url: "{%url 'auto_complete_brand'%}",
+						dataType: "json",
+						data: { input: request.term },
+						success: function (data) {
+							//console.log(data.brand);
+							response($.map(data.brand, function (item) {
+								//console.log(item);
+								return {
+									value: item.name,
+								}
+
+							}));
+						},
+					});
+
+				},
+				autoFocus: true,
+				minLength: 1,
+			});
+
+			$("#modelbox").autocomplete({
+				source: function (request, response) {
+					$.ajax({
+						type: "POST",
+						url: "{%url 'auto_complete_model'%}",
+						dataType: "json",
+						data: { input: request.term },
+						success: function (data) {
+							//console.log(data.brand);
+							response($.map(data.model, function (item) {
+								//console.log(item);
+								return {
+									value: item.name,
+								}
+
+							}));
+						},
+					});
+
+				},
+				autoFocus: true,
+				minLength: 1,
+			});
+
+			$("#conditionbox").autocomplete({
+				source: function (request, response) {
+					$.ajax({
+						type: "POST",
+						url: "{%url 'auto_complete_condition'%}",
+						dataType: "json",
+						data: { input: request.term },
+						success: function (data) {
+							//console.log(data.brand);
+							response($.map(data.condition, function (item) {
+								//console.log(item);
+								return {
+									value: item.name,
+								}
+
+							}));
+						},
+					});
+
+				},
+				autoFocus: true,
+				minLength: 1,
+			});
+
+			$("#desirebox").autocomplete({
+				source: function (request, response) {
+					$.ajax({
+						type: "POST",
+						url: "{%url 'auto_complete_desire'%}",
+						dataType: "json",
+						data: { input: request.term },
+						success: function (data) {
+							//console.log(data.brand);
+							response($.map(data.desire, function (item) {
+								//console.log(item);
+								return {
+									value: item.name,
+								}
+
+							}));
+						},
+					});
+
+				},
+				autoFocus: true,
+				minLength: 1,
+			});
+
+			$("#seasonbox").autocomplete({
+				source: function (request, response) {
+					$.ajax({
+						type: "POST",
+						url: "{%url 'auto_complete_season'%}",
+						dataType: "json",
+						data: { input: request.term },
+						success: function (data) {
+							//console.log(data.brand);
+							response($.map(data.season, function (item) {
+								//console.log(item);
+								return {
+									value: item.name,
+								}
+
+							}));
+						},
+					});
+
+				},
+				autoFocus: true,
+				minLength: 1,
+
+			});
+
+
+			// get_list();
+			$('#website').multiselect({ nonSelectedText: 'Website', includeSelectAllOption: true, });
+			console.log('fdsdfs')
+			$('#brand').multiselect({ nonSelectedText: 'Brand' });
+			$('#model').multiselect({ nonSelectedText: 'Model' });
+			$('#condition2').multiselect({ nonSelectedText: 'Condition' });
+			$('#desirability').multiselect({ nonSelectedText: 'Desirability' });
+			$('#season').multiselect({ nonSelectedText: 'Season' });
+
+			$(document).on("click", "#filter", function () {
+
+				var website = $('#website option:selected')
+				var website_selected = [];
+				$(website).each(function (index, website) {
+					website_selected.push([$(this).val()]);
+				});
+				console.log(website_selected)
+
+				website_selected = website_selected.join("|");
+
+
+				// var brand = $('#brand option:selected')
+				// var brand_selected = [];
+				// $(brand).each(function (index, brand) {
+				// 	brand_selected.push([$(this).val()]);
+				// });
+
+				// brand_selected = brand_selected.join("|");
+
+				// var model = $('#model option:selected')
+				// var model_selected = [];
+				// $(model).each(function (index, model) {
+				// 	model_selected.push([$(this).val()]);
+				// });
+
+				// model_selected = model_selected.join("|");
+
+				// var model = $('#model option:selected')
+				// var model_selected = [];
+				// $(model).each(function (index, model) {
+				// 	model_selected.push([$(this).val()]);
+				// });
+
+				// model_selected = model_selected.join("|");
+
+				// var condition2 = $('#condition2 option:selected')
+				// var condition2_selected = [];
+				// $(condition2).each(function (index, condition2) {
+				// 	condition2_selected.push([$(this).val()]);
+				// });
+
+				// condition2_selected = condition2_selected.join("|");
+
+				// var desirability = $('#desirability option:selected')
+				// var desirability_selected = [];
+				// $(desirability).each(function (index, desirability) {
+				// 	desirability_selected.push([$(this).val()]);
+				// });
+
+				// desirability_selected = desirability_selected.join("|");
+
+				// var season = $('#season option:selected')
+				// var season_selected = [];
+				// $(season).each(function (index, season) {
+				// 	season_selected.push([$(this).val()]);
+				// });
+
+				// season_selected = season_selected.join("|");
+
+
+				brand_selected = $('#brandbox').val()
+				model_selected = $('#modelbox').val()
+				condition_selected = $('#conditionbox').val()
+				desirability_selected = $('#desirebox').val()
+				season_selected = $('#seasonbox').val()
+
+				get_offerprice(website_selected, brand_selected, model_selected, condition_selected, desirability_selected, season_selected);
+			});
+		});
+
+
+		function get_offerprice(website_selected = '', brand_selected = '', model_selected = '', condition_selected = '', desirability_selected = '', season_selected = '') {
+			console.log('called')
+			$.ajax({
+				url: "{%url 'get_offer_price'%}",
+				type: "POST",
+				dataType: "html",
+				data: { "website_selected": website_selected, "brand_selected": brand_selected, "model_selected": model_selected, "condition_selected": condition_selected, "desirability_selected": desirability_selected, 'season_selected': season_selected },
+				success: function (data) {
+					$('tbody').html(data);
+					console.log('updated');
+				}
+			})
+			// $('#example').DataTable({
+			// 	"deferRender": true,
+			// 	"searching": false,
+			// 	"processing": false,
+			// 	"serverSide": true,
+			// 	"stateSave": true,
+			// 	"info": false,
+			// 	"lengthChange": false,
+			// 	"paging": false,
+			// 	"ordering": false,
+			// 	"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+
+			// 	"bDestroy": true
+
+			// });
+		}
+	</script>
+</body>
+
+</html>

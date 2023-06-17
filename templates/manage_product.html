@@ -1,0 +1,1111 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Manage Products :: PLG</title>
+	<!-- plugins:css -->
+	<link rel="stylesheet" href="{%static 'vendors/mdi/css/materialdesignicons.min.css' %}">
+	<link rel="stylesheet" href="{%static 'vendors/base/vendor.bundle.base.css' %}">
+	<!-- endinject -->
+	<!-- plugin css for this page -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+	<!-- End plugin css for this page -->
+	<!-- inject:css -->
+	<link rel="stylesheet" href="{%static 'config_page/css/style_old.css' %}">
+	<!-- endinject -->
+	<link rel="shortcut icon" href="{%static 'images/favicon.png' %}" />
+
+	<link rel="stylesheet" type="text/css" href="{% static 'vendors/bootstrap-multiselect.css' %}">
+	<!-- <link rel="stylesheet" href="{%static 'css/jquery-ui.css' %}"> -->
+	<link rel="stylesheet" href="{%static 'css/autocomplete.css' %}">
+
+	<!-- for autocomplete multiselect -->
+	<!-- <script src="multiselect_autocomplete.js"></script> -->
+
+	<style>
+		td {
+			width: auto;
+			max-width: 70mm;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		img.animated-gif {
+			width: 120px;
+			height: auto;
+		}
+
+
+		.multiselect-container>li>a>label {
+			margin: 0;
+			height: 100%;
+			cursor: pointer;
+			font-weight: 400;
+			font-size: small;
+			color: black;
+			padding: 3px 20px 3px 40px;
+		}
+
+		.scrolling {
+			height: 150px;
+			overflow-x: hidden;
+			overflow-y: auto;
+			text-align: center;
+			padding: 20px;
+		}
+
+		/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+		body.loading #modal {
+			overflow: hidden;
+		}
+
+		/* Anytime the body has the loading class, our
+   modal element will be visible */
+		body.loading #modal {
+			display: block;
+		}
+
+		#modal {
+			display: none;
+			position: fixed;
+			z-index: 1000;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			background: rgba(255, 255, 255, .8) url('{%static "images/loader_sm.gif"%}') 50% 50% no-repeat;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- for loader -->
+	<div id="modal"></div>`
+
+
+	<div class="container-scroller">
+		<!-- partial:partials/_navbar.html -->
+		<nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+			<div class="navbar-brand-wrapper d-flex justify-content-center">
+				<div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+					<a class="navbar-brand brand-logo" href="#"><img src="{%static 'images/logo.png' %}"
+							alt="logo" /></a>
+					<a class="navbar-brand brand-logo-mini" href="#"><img src="{%static 'images/favicon.png' %}"
+							alt="logo" /></a>
+				</div>
+			</div>
+
+			<div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+				<button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+					<span class="mdi mdi-sort-variant"></span>
+				</button>
+
+
+				<ul class="navbar-nav navbar-nav-right">
+					<li class="nav-item nav-profile dropdown">
+						<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+							<img src="{%static 'images/user.png' %}" alt="profile" />
+							<span class="nav-profile-name">Welcome {{user.first_name}}</span>
+						</a>
+						<div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+							aria-labelledby="profileDropdown">
+							{%if user.is_superuser%}
+							<a href="{%url 'manage_user'%}" class="dropdown-item">
+								<i class="mdi mdi-account-multiple-outline menu-icon"></i>
+								Manage Users
+							</a>
+							{%endif%}
+							<a href="{%url 'manage_product'%}" class="dropdown-item">
+								<i class="mdi mdi-file-document menu-icon"></i>
+								Manage Products
+							</a>
+							{%if user.is_superuser%}
+							<a href="{%url 'manage_config'%}" class="dropdown-item">
+								<i class="mdi mdi-file-document menu-icon"></i>
+								Manage Configurations
+							</a>
+							{%endif%}
+							<a href="{%url 'price_listing'%}" class="dropdown-item">
+								<i class="mdi mdi-file-document menu-icon"></i>
+								Offer Pricelisting
+							</a>
+							<a href="{%url 'logout'%}" class="dropdown-item">
+								<i class="mdi mdi-logout text-primary"></i>
+								Logout
+							</a>
+						</div>
+					</li>
+				</ul>
+				<button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+					data-toggle="offcanvas">
+					<span class="mdi mdi-menu"></span>
+				</button>
+			</div>
+		</nav>
+
+
+
+		<!-- partial -->
+		<div class="container-fluid page-body-wrapper">
+			<!-- partial:partials/_sidebar.html -->
+			<nav class="scrolling sidebar sidebar-offcanvas" id="sidebar">
+
+				<!-- 				
+				<ul class="nav">
+					<li class="nav-item">
+						<a class="nav-link" href="manage_user.html">
+							<i class="mdi mdi-account-multiple-outline menu-icon"></i>
+							<span class="menu-title">Manage Products</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="manage_product.html">
+							<i class="mdi mdi-file-document menu-icon"></i>
+							<span class="menu-title">Manage Products</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="price_listing.html">
+							<i class="mdi mdi-file-document menu-icon"></i>
+							<span class="menu-title">Price listing</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="manage_config.html">
+							<i class="mdi mdi-file-document menu-icon"></i>
+							<span class="menu-title">Manage Configurations</span>
+						</a>
+					</li>
+				</ul> -->
+
+
+				<div id="overall_price" class="mt-4 cost_diff">
+					<h3 class="text-start text-white mb-3">Reports</h3>
+					<hr>
+					<p class="high_price dflex justify-content-between">
+						<strong>Highest Price</strong>
+						<span class="highest_price">-</span>
+					</p>
+					<p class="low_price dflex justify-content-between">
+						<strong>Lowest Price</strong>
+						<span class="lowest_price">-</span>
+					</p>
+					<p class="avg_price dflex justify-content-between">
+						<strong>Average Price</strong>
+						<span class="average_price">-</span>
+					</p>
+					<p class="agg_sum dflex justify-content-between">
+						<strong>Aggregate Sum</strong>
+						<span class="aggregate_sum">-</span>
+					</p>
+					<p class="rec_count dflex justify-content-between">
+						<strong>Records Count</strong>
+						<span class="record_count">-</span>
+					</p>
+				</div>
+
+
+				<div id="cudoni_price" class="mt-2 cost_diff">
+
+					<h3 class="text-start site_name text-white mb-3"></h3>
+					<hr>
+
+					<p class="high_price dflex justify-content-between">
+						<strong>Highest Price</strong>
+						<span class="highest_price">-</span>
+					</p>
+					<p class="low_price dflex justify-content-between">
+						<strong>Lowest Price</strong>
+						<span class="lowest_price">-</span>
+					</p>
+					<p class="avg_price dflex justify-content-between">
+						<strong>Average Price</strong>
+						<span class="average_price">-</span>
+					</p>
+					<p class="agg_sum dflex justify-content-between">
+						<strong>Aggregate Sum</strong>
+						<span class="aggregate_sum">-</span>
+					</p>
+					<p class="rec_count dflex justify-content-between">
+						<strong>Records Count</strong>
+						<span class="record_count">-</span>
+					</p>
+				</div>
+
+
+				<div id="lampoo_price" class="mt-2 cost_diff">
+
+					<h3 class="site_name text-white mb-3"></h3>
+					<hr>
+
+					<p class="high_price dflex justify-content-between">
+						<strong>Highest Price</strong>
+						<span class="highest_price">-</span>
+					</p>
+					<p class="low_price dflex justify-content-between">
+						<strong>Lowest Price</strong>
+						<span class="lowest_price">-</span>
+					</p>
+					<p class="avg_price dflex justify-content-between">
+						<strong>Average Price</strong>
+						<span class="average_price">-</span>
+					</p>
+					<p class="agg_sum dflex justify-content-between">
+						<strong>Aggregate Sum</strong>
+						<span class="aggregate_sum">-</span>
+					</p>
+					<p class="rec_count dflex justify-content-between">
+						<strong>Records Count</strong>
+						<span class="record_count">-</span>
+					</p>
+				</div>
+
+
+				<div id="vestiaire_price" class="mt-2 cost_diff">
+
+					<h3 class="site_name text-white mb-3"></h3>
+					<hr>
+
+					<p class="high_price dflex justify-content-between">
+						<strong>Highest Price</strong>
+						<span class="highest_price">-</span>
+					</p>
+					<p class="low_price dflex justify-content-between">
+						<strong>Lowest Price</strong>
+						<span class="lowest_price">-</span>
+					</p>
+					<p class="avg_price dflex justify-content-between">
+						<strong>Average Price</strong>
+						<span class="average_price">-</span>
+					</p>
+					<p class="agg_sum dflex justify-content-between">
+						<strong>Aggregate Sum</strong>
+						<span class="aggregate_sum">-</span>
+					</p>
+					<p class="rec_count dflex justify-content-between">
+						<strong>Records Count</strong>
+						<span class="record_count">-</span>
+					</p>
+				</div>
+
+
+				<div id="realreal_price" class="mt-2 cost_diff">
+
+					<h3 class="site_name text-white mb-3"></h3>
+					<hr>
+
+					<p class="high_price dflex justify-content-between">
+						<strong>Highest Price</strong>
+						<span class="highest_price">-</span>
+					</p>
+					<p class="low_price dflex justify-content-between">
+						<strong>Lowest Price</strong>
+						<span class="lowest_price">-</span>
+					</p>
+					<p class="avg_price dflex justify-content-between">
+						<strong>Average Price</strong>
+						<span class="average_price">-</span>
+					</p>
+					<p class="agg_sum dflex justify-content-between">
+						<strong>Aggregate Sum</strong>
+						<span class="aggregate_sum">-</span>
+					</p>
+					<p class="rec_count dflex justify-content-between">
+						<strong>Records Count</strong>
+						<span class="record_count">-</span>
+					</p>
+				</div>
+
+			</nav>
+			<!-- partial -->
+
+
+			<div class="main-panel">
+				<div class="content-wrapper">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="d-flex justify-content-between flex-wrap">
+								<div class="d-flex align-items-center flex-wrap">
+									<div class="mr-md-3 mr-xl-5">
+										<h2 class="mb-0">Products</h2>
+									</div>
+								</div>
+								<div class="d-flex justify-content-between align-items-center flex-wrap">
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="row filter_div" style="display:none;">
+						<div class="col-md-12">
+							<div class="card mt-3">
+								<div class="card-body d-flex flex-column justify-content-around sticky">
+									<div class="row flex-sm-wrap justify-content-around">
+
+										<div class="d-flex flex-column">
+
+											<label for="website">Website</label>
+											<select class="website mx-1 my-1 btn btn-warning btn-flat" id='website'
+												name="states[]" multiple="multiple">
+												<option type="checkbox" value="vestiaire">Vestiaire</option>
+												<option type="checkbox" value="lampoo">Lampoo</option>
+												<option type="checkbox" value="realreal">RealReal</option>
+												<option type="checkbox" value="cudoni">Cudoni</option>
+											</select>
+
+
+										</div>
+
+
+										<div class="d-flex flex-column">
+											<label for="gender">Gender</label>
+											<select class="gender mx-1 my-1 btn btn-warning btn-flat" id='gender'
+												name="states[]" multiple="multiple">
+												<option type="checkbox" value="Men">Men</option>
+												<option type="checkbox" value="Women">Women</option>
+												<option type="checkbox" value="Kids">Kids</option>
+											</select>
+
+
+										</div>
+
+										<div class="d-flex flex-column">
+											<label for="post_status">Post Status</label>
+											<select class="post_status mx-1 my-1 btn btn-warning btn-flat"
+												id='post_status' name="states[]" multiple="multiple">
+												<option type="checkbox" value="LIVE">Live</option>
+												<option type="checkbox" value="SOLD">Sold</option>
+												<option type="checkbox" value="DISCOUNTED">Discounted</option>
+											</select>
+										</div>
+
+
+										<div class="d-flex flex-column">
+											<label for="category">Category</label>
+											<select class="category mx-1 my-1 btn btn-warning btn-flat" id='category'
+												name="states[]" multiple="multiple">
+												{%for category in categories%}
+												<option type=" checkbox" value="{{category}}">{{category}}</option>
+												{%endfor%}
+											</select>
+										</div>
+
+
+										<div class="d-flex flex-column">
+											<label for="sub_cat">Sub category</label>
+
+											<select class="sub_cat mx-1 my-1  btn btn-warning btn-flat" id='sub_cat'
+												name="states[]" multiple="multiple">
+												{%for sub_cat in sub_cats%}
+												<option type=" checkbox" value="{{sub_cat}}">{{sub_cat}}</option>
+												{%endfor%}
+											</select>
+										</div>
+
+
+										<div class="d-flex flex-column">
+											<label for="condition2">Condition</label>
+
+											<select class="condition2 mx-1 my-1 btn btn-warning btn-flat"
+												id='condition2' name="states[]" multiple="multiple">
+
+												{%for cond in conds%}
+												<option type=" checkbox" value="{{cond}}">{{cond}}</option>
+												{%endfor%}
+
+
+											</select>
+										</div>
+
+
+										<div class="d-flex flex-column">
+											<label for="brand">Brand</label>
+
+											<select class=" my-1 brand btn btn-warning btn-flat" id='brand'
+												name="states[]" multiple=" multiple">
+
+											</select>
+										</div>
+									</div>
+
+									<div class="row d-flex justify-content-end mt-3">
+										<div class="col-lg-2 col-md-3 col-sm-4 col-6">
+											<button id="clear_filter" class="btn btn-dark btn-flat w-100">Clear
+												Filters</button>
+										</div>
+										<div class="col-lg-2 col-md-3 col-sm-4 col-6">
+											<button id="filter" class="btn btn-dark btn-flat w-100">Submit</button>
+										</div>
+										<div class="col-lg-3 col-md-4 col-sm-6 col-6 pr-0">
+											<button id="excel" class="btn btn-dark btn-flat w-100">Export to
+												excel</button>
+										</div>
+									</div>
+
+									<!-- </a> -->
+								</div>
+
+								<div class="d-flex flex-row justify-content-around">
+									<!-- <p id="high_price">Highest Price: 7898.12</p>
+								<p id="low_price">Lowest Price:125.47</p>
+								<p id="avg_price">Average Price:2478.23</p> -->
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card mt-3">
+							<div class="card-body">
+
+
+								<div id="table_dat" class="table-responsive">
+									<table id="example" class="table table-hover table-bordered">
+										<thead>
+											<tr>
+												<!-- <th class="text-center">SL.No</th> -->
+												<th class="text-center">Website</th>
+												<th class="text-center">Gender</th>
+												<th class="text-center">Brand</th>
+												<th class="text-center">Category</th>
+												<th class="text-center">Sub Category</th>
+												<th class="text-center ">Product Description</th>
+												<th class="text-center ">Product Condition</th>
+												<th class="text-center">Material</th>
+												<th class="text-center">Colour</th>
+												<!-- <th class="text-center">Price</th> -->
+												<th class="text-center">Live Price</th>
+												<th class="text-center">Special Price</th>
+												<th class="text-center">Discount %</th>
+												<th class="text-center">Aggregate Price</th>
+												<th class="text-center">Estimated Retail Price</th>
+												<th class="text-center">Location</th>
+												<th class="text-center">Sold Date</th>
+												<th class="text-center">DateTime Stamp</th>
+												<th class="text-center">Status</th>
+
+											</tr>
+										</thead>
+										<tbody class="text-center">
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- content-wrapper ends -->
+			<!-- partial:partials/_footer.html -->
+			<footer class="footer">
+				<div class="d-sm-flex justify-content-center justify-content-sm-between">
+					<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright &copy;
+						<script type="text/javascript">document.write((new Date()).getFullYear());</script>. All
+						rights reserved.
+					</span>
+				</div>
+			</footer>
+			<!-- partial -->
+		</div>
+		<!-- main-panel ends -->
+	</div>
+	<!-- page-body-wrapper ends -->
+	</div>
+	<!-- container-scroller -->
+
+	<!-- plugins:js -->
+
+
+	<script src="{%static 'vendors/base/vendor.bundle.base.js' %}"></script>
+
+
+	<script>
+		function showfilter() {
+			setTimeout(function () {
+				document.getElementById("wrape").style.visibility = "visible";
+			}, 5000);
+		}
+	</script>
+
+
+	<script src="{%static 'js/jquery-ui.js' %}"></script>
+	<!-- endinject -->
+	<!-- End plugin js for this page-->
+	<!-- inject:js -->
+	<script src="{%static 'js/off-canvas.js' %} "></script>
+	<script src="{%static 'js/hoverable-collapse.js' %} "></script>
+	<script src="{%static 'js/template.js' %} "></script>
+	<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+
+	<script type="text/javascript" src="{% static 'vendors/bootstrap-multiselect.js' %}"></script>
+
+	<script>
+		$('#cudoni_price').show();
+		$('#lampoo_price').show();
+		$('#realreal_price').show();
+		$('#vestiaire_price').show();
+
+
+		$(document).ready(function () {
+
+			function refresh_cat() {
+				$('#category').find('option').remove();
+
+				var gender = $('#gender option:selected')
+				var gender_selected = [];
+				$(gender).each(function (index, gender) {
+					gender_selected.push([$(this).val()]);
+				});
+
+				gender_selected = gender_selected.join("|");
+
+				$.ajax({
+					url: "{% url 'get_category'%}",
+					type: "POST",
+					// async: false,
+					data: { "gender": gender_selected },
+					success: function (data) {
+						$.each(data["category_list"], function (key, value) {
+							console.log(key, value)
+							// $('#sub_cat').append
+							$('#category').append(new Option(value, value))
+						});
+
+						$('#category').multiselect('destroy');
+
+						$('#category').multiselect({
+							nonSelectedText: 'Category',
+							enableFiltering: true,
+							includeSelectAllOption: true,
+							enableCaseInsensitiveFiltering: true,
+						});
+
+						$('.multiselect-container').css('max-height', '300px').css('overflow-y', 'scroll');
+					}
+				})
+				console.log(gender_selected)
+			};
+
+			$("#gender").change(function () {
+
+				refresh_cat()
+
+			});
+
+			function refresh_subcat() {
+
+				$('#sub_cat').find('option').remove();
+
+				var category = $('#category option:selected')
+				var category_selected = [];
+				$(category).each(function (index, category) {
+					category_selected.push([$(this).val()]);
+				});
+
+				category_selected = category_selected.join("|");
+
+				$.ajax({
+					url: "{% url 'get_sub_category'%}",
+					type: "POST",
+					// async: false,
+					data: { "category": category_selected },
+					success: function (data) {
+						$.each(data["sub_cat_list"], function (key, value) {
+							console.log(key, value)
+							// $('#sub_cat').append
+							$('#sub_cat').append(new Option(value, value))
+						});
+
+						$('#sub_cat').multiselect('destroy');
+
+						$('#sub_cat').multiselect({
+							nonSelectedText: 'Sub Category',
+							enableFiltering: true,
+							includeSelectAllOption: true,
+							enableCaseInsensitiveFiltering: true,
+						});
+
+						$('.multiselect-container').css('max-height', '300px').css('overflow-y', 'scroll');
+					}
+				})
+				console.log(category_selected)
+
+			}
+
+			$("#category,#gender").change(function () {
+
+				refresh_subcat()
+
+			});
+
+
+
+			$('#website').multiselect({
+				nonSelectedText: 'Website',
+				//  enableFiltering: true,
+				includeSelectAllOption: true,
+				enableCaseInsensitiveFiltering: true,
+			});
+			$('#gender').multiselect({
+				nonSelectedText: 'Gender',
+				enableFiltering: true,
+				includeSelectAllOption: true,
+				enableCaseInsensitiveFiltering: true,
+			});
+			$('#post_status').multiselect({
+				nonSelectedText: 'Post Status',
+				// enableFiltering: true,
+				includeSelectAllOption: true,
+				enableCaseInsensitiveFiltering: true,
+			});
+			$('#category').multiselect({
+				nonSelectedText: 'Category',
+				enableFiltering: true,
+				includeSelectAllOption: true,
+				enableCaseInsensitiveFiltering: true,
+			});
+			$('#sub_cat').multiselect({
+				nonSelectedText: 'Sub Category',
+				enableFiltering: true,
+				includeSelectAllOption: true,
+				enableCaseInsensitiveFiltering: true,
+			});
+			$('#condition2').multiselect({
+				nonSelectedText: 'Condition',
+				enableFiltering: true,
+				includeSelectAllOption: true,
+				enableCaseInsensitiveFiltering: true,
+			});
+			$('#brand').multiselect({
+				nonSelectedText: 'Brand',
+				enableFiltering: true,
+				includeSelectAllOption: true,
+				enableCaseInsensitiveFiltering: true,
+			});
+
+			output = '';
+			var mylist = '{{brands}}'.split(',');
+			for (i = 0; i < mylist.length; i++) {
+				brand = mylist[i];
+				output += '<option type=" checkbox" value="' + brand + '">' + brand + '</option>';
+			};
+
+			$('#brand').html(output);
+
+			$('#brand').multiselect('rebuild');
+			$('.filter_div').css('display', 'block');
+
+			$('.multiselect-container').css('max-height', '300px').css('overflow-y', 'scroll');
+
+			$(document).on("click", "#clear_filter", function () {
+
+				$('#cudoni_price').show();
+				$('#lampoo_price').show();
+				$('#realreal_price').show();
+				$('#vestiaire_price').show();
+
+				//alert(1);
+				get_list();
+				//alert(2);
+				if ($('#website option:selected').length > 0) {
+					$("#website").val([]).multiselect('refresh');
+				}
+
+				if ($('#gender option:selected').length > 0) {
+					$("#gender").val([]).multiselect('refresh');
+				}
+
+				if ($('#post_status option:selected').length > 0) {
+					$("#post_status").val([]).multiselect('refresh');
+				}
+
+				refresh_cat();
+
+				refresh_subcat();
+
+				if ($('#condition2 option:selected').length > 0) {
+					$("#condition2").val([]).multiselect('refresh');
+				}
+
+				if ($('#brand option:selected').length > 0) {
+					$("#brand").val([]).multiselect('refresh');
+				}
+
+
+				//alert(3);
+				// $("#website").multiselect( 'refresh' );
+				// $("#gender").multiselect( 'refresh' );
+				// $("#post_status").multiselect( 'refresh' );
+				// $("#category").multiselect( 'refresh' );
+				// $("#sub_cat").multiselect( 'refresh' );
+				// $("#condition").multiselect( 'refresh' );
+				// $("#brand").multiselect( 'refresh' );
+			});
+
+			$('#excel').click(function () {
+
+				window.open("{%url 'download_excel'%}")
+			});
+
+			// $(document).on({
+			// 	ajaxStart: function () {
+			// 		$("body").addClass("loading");
+			// 	},
+			// 	ajaxStop: function () {
+			// 		$("body").removeClass("loading");
+			// 	}
+			// });
+
+			// $('#brand').autocomplete({   
+
+			// 	select: function(event, ui) {
+			// 		//$("#mass_p_article").val(ui.item.text); 
+			// 	},
+			// 	source: function( request, response ) {
+			// 		$.ajax({
+			// 			type: "POST",
+			// 			url : "{%url 'auto_complete_brand'%}",
+			// 			dataType: "json",
+			// 			data: {input: request.term},
+			// 			success: function( data ) {
+			// 				//console.log(data.brand);
+			// 				response( $.map( data.brand, function( item ) {
+			// 					//console.log(item);
+			// 					return {
+			// 						value: item,
+			// 					}
+
+			// 				}));
+			// 			},
+
+
+			// 		});
+
+			// 	},
+			// 	autoFocus: true,
+			// 	minLength: 1 ,
+
+			// }); 
+
+			// $('#condition2').autocomplete({   
+
+			// 	select: function(event, ui) {
+			// 		//$("#mass_p_article").val(ui.item.text); 
+			// 	},
+			// 	source: function( request, response ) {
+			// $.ajax({
+			// 	type: "POST",
+			// 	url : "{%url 'auto_complete_condition2'%}",
+			// 	dataType: "json",
+			// 	data: {input: request.term},
+			// 	success: function( data ) {
+			// 		//console.log(data.condition2);
+			// 		response( $.map( data.condition2, function( item ) {
+			// 			//console.log(item);
+			// 			return {
+			// 				value: item,
+			// 			}
+
+			// 		}));
+			// 	},
+
+
+			// });
+
+			// 	},
+			// 	autoFocus: true,
+			// 	minLength: 1 ,
+
+			// }); 
+
+			get_list();
+
+			$(document).on("click", "#filter", function () {
+
+
+
+				var brand = $('#brand option:selected')
+				var brand_selected = [];
+				$(brand).each(function (index, brand) {
+					brand_selected.push([$(this).val()]);
+				});
+
+				brand_selected = brand_selected.join("|");
+
+				// var brand_selected = $('#brand').val();
+
+				var gender = $('#gender option:selected')
+				var gender_selected = [];
+				$(gender).each(function (index, gender) {
+					gender_selected.push([$(this).val()]);
+				});
+
+				gender_selected = gender_selected.join("|");
+
+				var post_status = $('#post_status option:selected')
+				var post_status_selected = [];
+				$(post_status).each(function (index, post_status) {
+					post_status_selected.push([$(this).val()]);
+				});
+
+				post_status_selected = post_status_selected.join("|");
+
+				var condition2 = $('#condition2 option:selected')
+				var condition2_selected = [];
+				$(condition2).each(function (index, condition2) {
+					condition2_selected.push([$(this).val()]);
+				});
+
+				condition2_selected = condition2_selected.join("|");
+
+
+				// var condition2_selected = $('#condition2').val();
+
+				var website = $('#website option:selected')
+				var website_selected = [];
+				$(website).each(function (index, website) {
+					website_selected.push([$(this).val()]);
+				});
+
+				website_selected = website_selected.join("|");
+
+				var category = $('#category option:selected')
+				var category_selected = [];
+				$(category).each(function (index, category) {
+					category_selected.push([$(this).val()]);
+				});
+
+				category_selected = category_selected.join("|");
+
+				var sub_cat = $('#sub_cat option:selected')
+				var sub_cat_selected = [];
+				$(sub_cat).each(function (index, sub_cat) {
+					sub_cat_selected.push([$(this).val()]);
+				});
+
+				sub_cat_selected = sub_cat_selected.join("|");
+
+				get_list(brand_selected, gender_selected, post_status_selected, condition2_selected, website_selected, category_selected, sub_cat_selected);
+
+				// set_site_data();
+
+			});
+
+		});
+
+
+
+		function get_list(brand_selected = '', gender_selected = '', post_status_selected = '', condition2_selected = '', website_selected = '', category_selected = '', sub_cat_selected = '') {
+
+
+			$('body').addClass("loading");
+			$('#example').DataTable({
+				"deferRender": true,
+				"searching": true,
+				"paginate": true,
+				"processing": true,
+				"serverSide": true,
+				//"stateSave": true,
+				// "columns": [
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+				// 	{ "width": "20%" },
+
+				// ],
+				"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+				"ajax": {
+					"url": "{%url 'get_products'%}",
+					"async": false,
+					"type": 'POST',
+					"data": { "brand": brand_selected, "gender": gender_selected, "post_status": post_status_selected, "condition2": condition2_selected, "website": website_selected, "category": category_selected, "sub_cat": sub_cat_selected, "make_excel": "no", "status": 2 },
+
+				},
+
+				"bDestroy": true
+			});
+
+			set_col_data();
+			set_site_data()
+			$('body').removeClass("loading");
+
+		}
+
+		function set_col_data() {
+			$.ajax({
+				url: "{%url 'get_col_data'%}",
+				//async: false,
+				success: function (data) {
+
+					console.log('fsd');
+					$('#overall_price .highest_price').html(data["max_price"])
+					$('#overall_price .lowest_price').html(data["min_price"])
+					$('#overall_price .average_price').html(data["avg_price"])
+					$('#overall_price .aggregate_sum').html(data["agg_sum"])
+					$('#overall_price .record_count').html(data["record_count"])
+				}
+			});
+		}
+
+		function set_site_data() {
+			$.ajax({
+				url: "{%url 'get_site_data'%}",
+				async: false,
+				success: function (data) {
+					console.log('this is site data')
+					console.log(data['site_data']);
+					data = data['site_data']
+
+					if (data['cudoni']) {
+						$('#cudoni_price').show()
+						$('#cudoni_price .site_name').html("Cudoni")
+						$('#cudoni_price .highest_price').html(data['cudoni']["max_price"])
+						$('#cudoni_price .lowest_price').html(data['cudoni']["min_price"])
+						$('#cudoni_price .average_price').html(data['cudoni']["avg_price"])
+						$('#cudoni_price .aggregate_sum').html(data['cudoni']["aggregate_sum"])
+						$('#cudoni_price .record_count').html(data['cudoni']["record_count"])
+
+					}
+					else {
+						$('#cudoni_price').hide()
+					}
+
+					if (data['lampoo']) {
+						$('#lampoo_price').show()
+						$('#lampoo_price .site_name').html("Lampoo")
+						$('#lampoo_price .highest_price').html(data['lampoo']["max_price"])
+						$('#lampoo_price .lowest_price').html(data['lampoo']["min_price"])
+						$('#lampoo_price .average_price').html(data['lampoo']["avg_price"])
+						$('#lampoo_price .aggregate_sum').html(data['lampoo']["aggregate_sum"])
+						$('#lampoo_price .record_count').html(data['lampoo']["record_count"])
+
+					}
+					else {
+						$('#lampoo_price').hide()
+					}
+
+					if (data['realreal']) {
+						$('#realreal_price').show();
+						$('#realreal_price .site_name').html("RealReal")
+						$('#realreal_price .highest_price').html(data['realreal']["max_price"])
+						$('#realreal_price .lowest_price').html(data['realreal']["min_price"])
+						$('#realreal_price .average_price').html(data['realreal']["avg_price"])
+						$('#realreal_price .aggregate_sum').html(data['realreal']["aggregate_sum"])
+						$('#realreal_price .record_count').html(data['realreal']["record_count"])
+					}
+					else {
+						$('#realreal_price').hide()
+					}
+
+
+					if (data['vestiaire']) {
+						$('#vestiaire_price').show();
+						$('#vestiaire_price .site_name').html("Vestiaire")
+						$('#vestiaire_price .highest_price').html(data['vestiaire']["max_price"])
+						$('#vestiaire_price .lowest_price').html(data['vestiaire']["min_price"])
+						$('#vestiaire_price .average_price').html(data['vestiaire']["avg_price"])
+						$('#vestiaire_price .aggregate_sum').html(data['vestiaire']["aggregate_sum"])
+						$('#vestiaire_price .record_count').html(data['vestiaire']["record_count"])
+					}
+					else {
+						$('#vestiaire_price').hide()
+					}
+
+				}
+			});
+		}
+	</script>
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="ViewModal" tabindex="-1" role="dialog" aria-labelledby="ViewModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="AddUserLabel">Add / Edit Product</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col">
+							<div class="form-group">
+								<label for="" class="col-form-label p-0 m-0">First Name</label>
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+						<div class="col">
+							<div class="form-group">
+								<label for="" class="col-form-label p-0 m-0">Last Name</label>
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<div class="form-group">
+								<label for="" class="col-form-label p-0 m-0">Password</label>
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+						<div class="col">
+							<div class="form-group">
+								<label for="" class="col-form-label p-0 m-0">Confirm Password</label>
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<div class="form-group">
+								<label for="" class="col-form-label p-0 m-0">Email ID</label>
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+						<div class="col">
+							<div class="form-group">
+								<label for="" class="col-form-label p-0 m-0">Phone</label>
+								<input type="text" class="form-control" id="" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal"><i
+							class="mdi mdi-close-circle"></i> &nbsp; Cancel</button>
+					<button type="button" class="btn btn-primary"><i class="mdi mdi-content-save"></i> &nbsp;
+						Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="overlay"></div>
+</body>
+
+</html>
